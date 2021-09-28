@@ -1,0 +1,16 @@
+#allow init rootfs:file { execute_no_trans };
+allow init unlabeled:dir { mounton };
+allow init sdcardd_exec:file { read open getattr };
+allow init rfs_system_file:lnk_file { read };
+allow init init:socket { read create bind };
+allow init thermal_device:chr_file { ioctl };
+allow init diag_device:chr_file { write ioctl };
+allow init proc_dirty_ratio:file { write };
+# allow init system_file:file { execute_no_trans };
+allow init smem_log_device:chr_file { write ioctl };
+allow init init:socket { write ioctl };
+allow init thermal_device:chr_file { write };
+allow init sysfs_mpdecision:file { getattr };
+allow init qmuxd:unix_stream_socket { connectto };
+allow init qmuxd_socket:sock_file { write };
+allow init init:socket { getopt };

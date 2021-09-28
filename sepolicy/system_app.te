@@ -1,0 +1,6 @@
+allow system_app { qmuxd_socket dpmd_data_file }:dir { search write add_name getattr remove_name };
+allow system_app { qmuxd_socket dpmd_socket }:sock_file { create open read write setattr };
+allow system_app { cne_service qtitetherservice_service dpmservice }:service_manager { add };
+allow system_app ipa_dev:chr_file { open read write ioctl };
+allow system_app dpmd_data_file:file { create getattr setattr read write open lock };
+allow system_app qmuxd:unix_stream_socket connectto;

@@ -1,0 +1,150 @@
+
+
+/system/bin/shutdownanimation u:object_r:bootanim_exec:s0
+
+
+
+# wirelesstest
+/dev/socket/wirelesstest       u:object_r:device:s0
+
+
+###################################
+# Dev nodes
+#
+/dev/bcm2079x                                    u:object_r:nfc_device:s0
+/dev/block/platform/soc\.0/f9824900\.sdhci//by-name/modemst1          u:object_r:modem_efs_partition_device:s0
+/dev/block/platform/soc\.0/f9824900\.sdhci//by-name/modemst2          u:object_r:modem_efs_partition_device:s0
+/dev/block/platform/soc\.0/f9824900\.sdhci//by-name/fsg               u:object_r:modem_efs_partition_device:s0
+/dev/block/platform/soc\.0/f9824900\.sdhci//by-name/fsc               u:object_r:modem_efs_partition_device:s0
+/dev/block/platform/soc\.0/f9824900\.sdhci//by-name/ssd               u:object_r:ssd_device:s0
+/dev/block/platform/soc\.0/f9824900\.sdhci/by-name/mdm1m9kefs1       u:object_r:efs_boot_dev:s0
+/dev/block/platform/soc\.0/f9824900\.sdhci/by-name/mdm1m9kefs2       u:object_r:efs_boot_dev:s0
+/dev/block/platform/soc\.0/f9824900\.sdhci/by-name/mdm1m9kefs3       u:object_r:efs_boot_dev:s0
+/dev/block/platform/soc\.0/f9824900\.sdhci/by-name/mdm1m9kefsc       u:object_r:efs_boot_dev:s0
+/dev/block/platform/soc\.0/f9824900\.sdhci/by-name/msadp             u:object_r:mba_debug_dev:s0
+
+/dev/block/platform/soc\.0/f9824900\.sdhci/by-name/modem            u:object_r:modem_block_device:s0
+/dev/block/platform/soc\.0/f9824900\.sdhci/by-name/bootselect        u:object_r:bootselect_device:s0
+
+/dev/block/platform/soc\.0/f9824900\.sdhci/by-name/persist          u:object_r:persist_block_device:s0
+
+
+###################################
+# Dev socket nodes
+#
+
+/dev/socket/RIDL(/.*)?                          u:object_r:RIDL_socket:s0
+###################################
+# System files
+#
+
+
+/system/bin/gsiff_daemon                        u:object_r:location_exec:s0
+
+/system/vendor/bin/slim_ap_daemon               u:object_r:location_exec:s0
+
+/system/vendor/bin/RIDLClient.exe               u:object_r:RIDL_exec:s0
+
+/system/bin/atmel_ts\.sh                         u:object_r:atmelts_exec:s0
+
+
+###################################
+# sysfs files
+#
+
+#/sys/bus/i2c/devices/2-004a(/.*)?                                  u:object_r:atmelts:s0
+/sys/bus/i2c/devices/2-004a/bootloader                              u:object_r:atmelts:s0
+/sys/bus/i2c/devices/2-004a/clip                                    u:object_r:atmelts:s0
+/sys/bus/i2c/devices/2-004a/clip_tag                                u:object_r:atmelts:s0
+/sys/bus/i2c/devices/2-004a/cmd                                     u:object_r:atmelts:s0
+/sys/bus/i2c/devices/2-004a/debug_enable                            u:object_r:atmelts:s0
+/sys/bus/i2c/devices/2-004a/debug_notify                            u:object_r:atmelts:s0
+/sys/bus/i2c/devices/2-004a/debug_v2_enable                         u:object_r:atmelts:s0
+/sys/bus/i2c/devices/2-004a/depth                                   u:object_r:atmelts:s0
+/sys/bus/i2c/devices/2-004a/easy_wakeup_gesture                     u:object_r:atmelts:s0
+/sys/bus/i2c/devices/2-004a/en_gesture                              u:object_r:atmelts:s0
+/sys/bus/i2c/devices/2-004a/en_glove                                u:object_r:atmelts:s0
+/sys/bus/i2c/devices/2-004a/en_stylus                               u:object_r:atmelts:s0
+/sys/bus/i2c/devices/2-004a/fw_version                              u:object_r:atmelts:s0
+/sys/bus/i2c/devices/2-004a/gesture_list                            u:object_r:atmelts:s0
+/sys/bus/i2c/devices/2-004a/gesture_trace                           u:object_r:atmelts:s0
+/sys/bus/i2c/devices/2-004a/hw_version                              u:object_r:atmelts:s0
+/sys/bus/i2c/devices/2-004a/ic_detect                               u:object_r:atmelts:s0
+/sys/bus/i2c/devices/2-004a/manual_cali                             u:object_r:atmelts:s0
+/sys/bus/i2c/devices/2-004a/mem_access                              u:object_r:atmelts:s0
+/sys/bus/i2c/devices/2-004a/misc                                    u:object_r:atmelts:s0
+/sys/bus/i2c/devices/2-004a/name                                    u:object_r:atmelts:s0
+/sys/bus/i2c/devices/2-004a/object                                  u:object_r:atmelts:s0
+/sys/bus/i2c/devices/2-004a/plugin                                  u:object_r:atmelts:s0
+/sys/bus/i2c/devices/2-004a/plugin_tag                              u:object_r:atmelts:s0
+/sys/bus/i2c/devices/2-004a/power                                   u:object_r:atmelts:s0
+/sys/bus/i2c/devices/2-004a/slide_switch_gesture                    u:object_r:atmelts:s0
+/sys/bus/i2c/devices/2-004a/t19                                     u:object_r:atmelts:s0
+/sys/bus/i2c/devices/2-004a/t25                                     u:object_r:atmelts:s0
+/sys/bus/i2c/devices/2-004a/update_cfg0                             u:object_r:atmelts:s0
+/sys/bus/i2c/devices/2-004a/update_fw0                              u:object_r:atmelts:s0
+#/sys/devices/soc.0/f9924000.i2c/i2c-2/2-004a(/.*)?                 u:object_r:atmelts:s0
+/sys/devices/soc.0/f9924000.i2c/i2c-2/2-004a/bootloader             u:object_r:atmelts:s0
+/sys/devices/soc.0/f9924000.i2c/i2c-2/2-004a/clip                   u:object_r:atmelts:s0
+/sys/devices/soc.0/f9924000.i2c/i2c-2/2-004a/clip_tag               u:object_r:atmelts:s0
+/sys/devices/soc.0/f9924000.i2c/i2c-2/2-004a/cmd                    u:object_r:atmelts:s0
+/sys/devices/soc.0/f9924000.i2c/i2c-2/2-004a/debug_enable           u:object_r:atmelts:s0
+/sys/devices/soc.0/f9924000.i2c/i2c-2/2-004a/debug_notify           u:object_r:atmelts:s0
+/sys/devices/soc.0/f9924000.i2c/i2c-2/2-004a/debug_v2_enable        u:object_r:atmelts:s0
+/sys/devices/soc.0/f9924000.i2c/i2c-2/2-004a/depth                  u:object_r:atmelts:s0
+/sys/devices/soc.0/f9924000.i2c/i2c-2/2-004a/easy_wakeup_gesture    u:object_r:atmelts:s0
+/sys/devices/soc.0/f9924000.i2c/i2c-2/2-004a/en_gesture             u:object_r:atmelts:s0
+/sys/devices/soc.0/f9924000.i2c/i2c-2/2-004a/en_glove               u:object_r:atmelts:s0
+/sys/devices/soc.0/f9924000.i2c/i2c-2/2-004a/en_stylus              u:object_r:atmelts:s0
+/sys/devices/soc.0/f9924000.i2c/i2c-2/2-004a/fw_version             u:object_r:atmelts:s0
+/sys/devices/soc.0/f9924000.i2c/i2c-2/2-004a/gesture_list           u:object_r:atmelts:s0
+/sys/devices/soc.0/f9924000.i2c/i2c-2/2-004a/gesture_trace          u:object_r:atmelts:s0
+/sys/devices/soc.0/f9924000.i2c/i2c-2/2-004a/hw_version             u:object_r:atmelts:s0
+/sys/devices/soc.0/f9924000.i2c/i2c-2/2-004a/ic_detect              u:object_r:atmelts:s0
+/sys/devices/soc.0/f9924000.i2c/i2c-2/2-004a/manual_cali            u:object_r:atmelts:s0
+/sys/devices/soc.0/f9924000.i2c/i2c-2/2-004a/mem_access             u:object_r:atmelts:s0
+/sys/devices/soc.0/f9924000.i2c/i2c-2/2-004a/misc                   u:object_r:atmelts:s0
+/sys/devices/soc.0/f9924000.i2c/i2c-2/2-004a/name                   u:object_r:atmelts:s0
+/sys/devices/soc.0/f9924000.i2c/i2c-2/2-004a/object                 u:object_r:atmelts:s0
+/sys/devices/soc.0/f9924000.i2c/i2c-2/2-004a/plugin                 u:object_r:atmelts:s0
+/sys/devices/soc.0/f9924000.i2c/i2c-2/2-004a/plugin_tag             u:object_r:atmelts:s0
+/sys/devices/soc.0/f9924000.i2c/i2c-2/2-004a/power                  u:object_r:atmelts:s0
+/sys/devices/soc.0/f9924000.i2c/i2c-2/2-004a/slide_switch_gesture   u:object_r:atmelts:s0
+/sys/devices/soc.0/f9924000.i2c/i2c-2/2-004a/t19                    u:object_r:atmelts:s0
+/sys/devices/soc.0/f9924000.i2c/i2c-2/2-004a/t25                    u:object_r:atmelts:s0
+/sys/devices/soc.0/f9924000.i2c/i2c-2/2-004a/update_cfg0            u:object_r:atmelts:s0
+/sys/devices/soc.0/f9924000.i2c/i2c-2/2-004a/update_fw0             u:object_r:atmelts:s0
+/sys/devices/soc.0/f9924000.i2c/i2c-2/2-004a/grip_sup_enable        u:object_r:atmelts_type:s0
+/sys/class/proximity/proximity/prox_offset_cal_start                u:object_r:sysfs_prox_cal:s0
+/sys/class/proximity/proximity/prox_data_safe_range_min             u:object_r:sysfs_prox_cal:s0
+/sys/class/proximity/proximity/prox_data_safe_range_max             u:object_r:sysfs_prox_cal:s0
+/sys/class/proximity/proximity/prox_data_max                        u:object_r:sysfs_prox_cal:s0
+/sys/class/proximity/proximity/prox_offset_cal                      u:object_r:sysfs_prox_cal:s0
+/sys/class/proximity/proximity/prox_offset_cal_verify               u:object_r:sysfs_prox_cal:s0
+/sys/class/proximity/proximity/prox_thres_min                       u:object_r:sysfs_prox_cal:s0
+/sys/class/proximity/proximity/prox_thres_max                       u:object_r:sysfs_prox_cal:s0
+/sys/class/proximity/proximity/threshold                            u:object_r:sysfs_prox_cal:s0
+/sys/class/proximity/proximity/prox_thres                           u:object_r:sysfs_prox_cal:s0
+/sys/class/proximity/proximity/prox_calibrate_start                 u:object_r:sysfs_prox_cal:s0
+/sys/class/proximity/proximity/prox_calibrate_verify                u:object_r:sysfs_prox_cal:s0
+/sys/devices/virtual/proximity/proximity/prox_offset_cal_start      u:object_r:sysfs_prox_cal:s0
+/sys/devices/virtual/proximity/proximity/prox_data_safe_range_min   u:object_r:sysfs_prox_cal:s0
+/sys/devices/virtual/proximity/proximity/prox_data_safe_range_max   u:object_r:sysfs_prox_cal:s0
+/sys/devices/virtual/proximity/proximity/prox_data_max              u:object_r:sysfs_prox_cal:s0
+/sys/devices/virtual/proximity/proximity/prox_offset_cal            u:object_r:sysfs_prox_cal:s0
+/sys/devices/virtual/proximity/proximity/prox_offset_cal_verify     u:object_r:sysfs_prox_cal:s0
+/sys/devices/virtual/proximity/proximity/prox_thres_min             u:object_r:sysfs_prox_cal:s0
+/sys/devices/virtual/proximity/proximity/prox_thres_max             u:object_r:sysfs_prox_cal:s0
+/sys/devices/virtual/proximity/proximity/threshold                  u:object_r:sysfs_prox_cal:s0
+/sys/devices/virtual/proximity/proximity/prox_thres                 u:object_r:sysfs_prox_cal:s0
+/sys/devices/virtual/proximity/proximity/prox_calibrate_start       u:object_r:sysfs_prox_cal:s0
+/sys/devices/virtual/proximity/proximity/prox_calibrate_verify      u:object_r:sysfs_prox_cal:s0
+
+#line 1 "device/zte/NX508J/sepolicy/file_contexts"
+
+/dev/i2c-1                                      u:object_r:audio_device:s0
+/dev/sma                                    u:object_r:audio_device:s0
+/sys/class/headset_impedance/fsa8069/impedance  u:object_r:audio_device:s0
+/dev/msm_audio_cal                     u:object_r:audio_device:s0
+/system/bin/init\.nx508j\.power\.sh         u:object_r:init-power-sh_exec:s0
+

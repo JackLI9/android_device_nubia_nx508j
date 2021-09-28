@@ -1,0 +1,8 @@
+binder_call(audioserver, rild)
+
+userdebug_or_eng(`
+  allow audioserver diag_device:chr_file rw_file_perms;
+')
+
+# allow reading /sys/devices/soc0/hw_platform for acdb
+allow audioserver sysfs:file { getattr open read };
