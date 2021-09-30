@@ -29,7 +29,7 @@
     <item name="gps.on">90</item>
     <!-- The current consumed by the radio when it is scanning for a signal -->
     <item name="radio.active">159</item>
-    <item name="radio.scanning">41</item>
+    <item name="radio.scanning">4</item>
     <!-- Current consumed by the radio at different signal strengths, when paging -->
     <array name="radio.on"> <!-- Strength 0 to BINS-1 -->
         <value>3.9</value>
