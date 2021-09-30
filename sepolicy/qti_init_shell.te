@@ -11,3 +11,6 @@ allow qti_init_shell atmelts:file { open write getattr setattr };
 allow qti_init_shell bluetooth_data_file:file { open read getattr };
 allow qti_init_shell atmelts_exec:file { open read };
 allow qti_init_shell kernel:system { syslog_read };
+allow qti_init_shell init-power-sh_exec:file { open read };
+allow qti_init_shell cache_file:dir { open read write };
+allow qti_init_shell sysfs_rqstats:dir { open read write search };
