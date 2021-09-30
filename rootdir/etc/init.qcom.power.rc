@@ -1,7 +1,6 @@
 on boot
-    # execute script to set initial CPU settings
-    # don't run as a service to avoid race conditions
-    exec - root root system -- /system/bin/init.nx508j.power.sh
+    #exec - root root system -- /system/bin/init.nx508j.power.sh
+    start nx508j-power
     write /proc/sys/kernel/sched_boost 1
 
 on charger
@@ -26,6 +25,13 @@ service charger /charger
     group log
     seclabel u:r:healthd:s0
     writepid /dev/cpuset/system-background/tasks
+
+service nx508j-power /system/bin/sh /system/bin/init.nx508j.power.sh
+	class main
+	user root
+	group root
+	oneshot
+	disabled
 
 on class_start:late_start
     trigger enable-low-power
