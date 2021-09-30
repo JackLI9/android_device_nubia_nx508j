@@ -182,10 +182,6 @@ PRODUCT_PACKAGES += \
     libsecureui \
     libmdtp
 
-# Charger
-PRODUCT_PACKAGES += \
-    charger_res_images
-
 # Connectivity Engine support
 PRODUCT_PACKAGES += \
     cneapiclient \
