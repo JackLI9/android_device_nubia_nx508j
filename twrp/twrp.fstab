@@ -3,10 +3,10 @@
 /recovery	    emmc	/dev/block/bootdevice/by-name/recovery		flags=backup=1							defaults
 /system	        ext4	/dev/block/bootdevice/by-name/system		defaults							defaults
 /system_image	emmc	/dev/block/bootdevice/by-name/system		defaults							defaults
-/data           f2fs    /dev/block/bootdevice/by-name/userdata      nosuid,nodev,noatime,nodiratime,inline_xattr,data_flush                                                         wait,check,encryptable=footer,formattable,length=-16384
-# /data           ext4    /dev/block/bootdevice/by-name/userdata      nosuid,nodev,noatime,nodiratime,barrier=1,noauto_da_alloc                                                       wait,check,encryptable=footer,formattable,length=-16384
-/cache          f2fs    /dev/block/bootdevice/by-name/cache         nosuid,nodev,noatime,nodiratime,inline_xattr,flush_merge,data_flush                                             wait,check,formattable
-# /cache          ext4    /dev/block/bootdevice/by-name/cache         nosuid,nodev,noatime,nodiratime,barrier=1                                                                       wait,check,formattable
+#/data           f2fs    /dev/block/bootdevice/by-name/userdata      nosuid,nodev,noatime,nodiratime,inline_xattr,data_flush                                                         wait,check,encryptable=footer,formattable,length=-16384
+/data           ext4    /dev/block/bootdevice/by-name/userdata      nosuid,nodev,noatime,nodiratime,barrier=1,noauto_da_alloc                                                       wait,check,encryptable=footer,formattable,length=-16384
+#/cache          f2fs    /dev/block/bootdevice/by-name/cache         nosuid,nodev,noatime,nodiratime,inline_xattr,flush_merge,data_flush                                             wait,check,formattable
+/cache          ext4    /dev/block/bootdevice/by-name/cache         nosuid,nodev,noatime,nodiratime,barrier=1                                                                       wait,check,formattable
 /firmware	    vfat	/dev/block/bootdevice/by-name/modem			flags=display="Firmware";mounttodecrypt;fsflags=ro		defaults
 /misc		    emmc	/dev/block/bootdevice/by-name/misc			defaults							defaults
 /modem		    emmc	/dev/block/bootdevice/by-name/modem			flags=backup=1;display="Modem"					defaults
