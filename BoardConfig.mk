@@ -225,9 +225,6 @@ else
   TW_NEW_ION_HEAP := true
 endif
 
-# Ril
-BOARD_PROVIDES_RILD := true
-
 # Added to indicate that protobuf-c is supported in this build
 PROTOBUF_SUPPORTED := true
 
