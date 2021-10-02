@@ -228,9 +228,6 @@ persist.sys.devicename=nubia Z9
 #device name for camera picture
 ro.config.devicename=nubia Z9
 
-#ZTEMT add for bootsound
-sys.zte.bootsound.on=1
-
 #add model number
 persist.sys.modelnumber=NX508J
 
@@ -238,3 +235,4 @@ persist.sys.modelnumber=NX508J
 persist.sys.cmiitid=2015CP1408
 
 ro.sf.lcd_density=480
+
