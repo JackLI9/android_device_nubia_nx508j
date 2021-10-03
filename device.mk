@@ -55,11 +55,6 @@ PRODUCT_COPY_FILES += \
 #    frameworks/av/services/audiopolicy/config/r_submix_audio_policy_configuration.xml:/system/etc/r_submix_audio_policy_configuration.xml \
 #    frameworks/av/services/audiopolicy/config/usb_audio_policy_configuration.xml:/system/etc/usb_audio_policy_configuration.xml
 
-# Misc. libs
-PRODUCT_PACKAGES += \
-    libstlport \
-    libboringssl-compat
-
 # Camera
 PRODUCT_PACKAGES += \
     Snap \
@@ -176,11 +171,6 @@ PRODUCT_PACKAGES += \
     NfcNci \
     Tag
 
-# Bson
-PRODUCT_PACKAGES += \
-    libbson \
-    libsecureui \
-    libmdtp
 
 # Connectivity Engine support
 PRODUCT_PACKAGES += \
@@ -253,7 +243,6 @@ PRODUCT_PACKAGES += \
     atmel_ts.sh \
     init.qcom.uicc.sh \
     init.project.rc \
-    init.recovery.vold_decrypt.rc \
     init.nx508j.power.sh \
     init.environ.rc \
     usf_post_boot.sh \
@@ -263,8 +252,7 @@ PRODUCT_PACKAGES += \
 # IPv6
 PRODUCT_PACKAGES += \
     ebtables \
-    ethertypes \
-    libebtc
+    ethertypes
 
 # Keystore
 PRODUCT_PACKAGES += \
