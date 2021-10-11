@@ -26,7 +26,7 @@
 #
 
 # the DIAG device node is not world writable/readable.
-/dev/diag                 0660   system     qcom_diag
+/dev/diag                 0660   system     oem_2950
 
 /dev/genlock              0666   system     system
 /dev/kgsl                 0666   system     system
@@ -42,9 +42,9 @@
 /dev/smd6                 0660   system     system
 /dev/smd7                 0660   bluetooth  bluetooth
 /dev/ccid_bridge          0660   system     system
-/dev/ipa                  0660   net_admin  net_admin
-/dev/wwan_ioctl           0660   net_admin  net_admin
-/dev/ipaNatTable          0660   net_admin  net_admin
+/dev/ipa                  0660   radio      radio
+/dev/wwan_ioctl           0660   radio      radio
+/dev/ipaNatTable          0660   radio      radio
 /dev/rmnet_ctrl           0660   usb        usb
 /dev/dpl_ctrl             0660   usb        usb
 
@@ -106,7 +106,7 @@
 /dev/video*               0660   system     camera
 /dev/media*               0660   system     camera
 /dev/v4l-subdev*          0660   system     camera
-/dev/qseecom              0660   system     drmrpc
+/dev/qseecom              0666   system     drmrpc
 /dev/seemplog             0660   system     system
 /dev/pft                  0660   system     drmrpc
 /dev/gemini0              0660   system     camera
@@ -155,8 +155,8 @@
 /dev/msm_preproc_ctl      0660   system     audio
 /dev/msm_rtac             0660   system     audio
 /dev/msm_voicememo        0660   system     audio
-/dev/smd3                 0660   bluetooth  net_bt_stack
-/dev/smd2                 0660   bluetooth  net_bt_stack
+/dev/smd3                 0660   bluetooth  bluetooth
+/dev/smd2                 0660   bluetooth  bluetooth
 /dev/ttyHSL1              0660   system     system
 /dev/ttyHS1               0660   system     system
 /dev/mdm                  0660   system     radio
@@ -228,9 +228,7 @@
 /dev/ramdump*             0640   system     system
 
 # Add device block for FRP
-/dev/block/bootdevice/by-name/config    0660   system     system
-/dev/block/platform/soc.0/f9824900.sdhci/by-name/config   0660   system     system
+/dev/block/platform/soc.0/f9824900.sdhci/by-name/config    0660   system     system
 
 
 /dev/i2c-1                0660   system     audio
-/dev/sma                0660   system     audio

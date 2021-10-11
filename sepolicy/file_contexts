@@ -28,6 +28,14 @@
 
 /dev/block/platform/soc\.0/f9824900\.sdhci/by-name/persist          u:object_r:persist_block_device:s0
 
+# Lights
+/sys/class/leds(/.*)?                                                   u:object_r:sysfs_leds:s0
+/sys/devices/soc\.0/leds-qpnp-(.*)?/leds(/.*)?                          u:object_r:sysfs_leds:s0
+/sys/devices/soc\.0/qpnp-wled-(.*)?/leds(/.*)?                          u:object_r:sysfs_leds:s0
+/sys/devices/soc\.0/leds-qpnp-(.*)?/leds(/.*)?/nubia_led(/.*)?                          u:object_r:sysfs_leds:s0
+/sys/devices/soc\.0/[a-z0-9]+.qcom,mdss_mdp/[a-z0-9]+.qcom,mdss_mdp:qcom,mdss_fb_primary/leds/lcd-backlight(/.*)?    u:object_r:sysfs_leds:s0
+/(vendor|system/vendor)/bin/hw/android\.hardware\.light@2\.0-service.nx508j    u:object_r:hal_light_default_exec:s0
+
 
 ###################################
 # Dev socket nodes
@@ -43,10 +51,8 @@
 
 /system/vendor/bin/slim_ap_daemon               u:object_r:location_exec:s0
 
-/system/vendor/bin/RIDLClient.exe               u:object_r:RIDL_exec:s0
-
-/system/bin/atmel_ts\.sh                         u:object_r:atmelts_exec:s0
-
+/(vendor|system/vendor)/bin/atmel_ts\.sh                         u:object_r:atmelts_exec:s0
+/(vendor|system/vendor)/bin/tp_node\.sh                         u:object_r:touchp_exec:s0
 
 ###################################
 # sysfs files

@@ -19,6 +19,7 @@
 <!-- Phone app resources that may need to be customized
      for different hardware or product builds. -->
 <resources>
+
     <!-- Determine whether we should show the "listen for instructions" screen after
          successfully placing the OTA call -->
     <integer name="OtaShowListeningScreen">1</integer>
@@ -48,6 +49,9 @@
 
     <!-- Show cdma auto network mode in (glabal) roaming -->
     <bool name="config_show_cdma" translatable="false">true</bool>
+
+    <!-- Flag indicating if hac is enabled -->
+    <bool name="hac_enabled">true</bool>
 
     <!-- Show enabled lte option for lte device -->
     <bool name="config_enabled_lte" translatable="false">true</bool>

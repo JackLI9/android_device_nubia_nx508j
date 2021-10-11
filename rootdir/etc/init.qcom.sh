@@ -1,4 +1,4 @@
-#!/system/bin/sh
+#!/vendor/bin/sh
 # Copyright (c) 2009-2015, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -38,9 +38,12 @@ fi
 start_sensors()
 {
     if [ -c /dev/msm_dsps -o -c /dev/sensors ]; then
+        mkdir -p /persist/sensors
         chmod -h 775 /persist/sensors
         chmod -h 664 /persist/sensors/sensors_settings
         chown -h system.root /persist/sensors/sensors_settings
+        chmod -h 664 /persist/sensors/gyro_sensitity_cal
+        chown -h system.root /persist/sensors/gyro_sensitity_cal
 
         mkdir -p /data/misc/sensors
         chmod -h 775 /data/misc/sensors
@@ -96,7 +99,7 @@ start_vm_bms()
 
 start_msm_irqbalance_8939()
 {
-	if [ -f /system/bin/msm_irqbalance ]; then
+	if [ -f /system/vendor/bin/msm_irqbalance ]; then
 		case "$platformid" in
 		    "239")
 			start msm_irqbalance;;
@@ -106,7 +109,7 @@ start_msm_irqbalance_8939()
 
 start_msm_irqbalance()
 {
-	if [ -f /system/bin/msm_irqbalance ]; then
+	if [ -f /system/vendor/bin/msm_irqbalance ]; then
 		start msm_irqbalance
 	fi
 }

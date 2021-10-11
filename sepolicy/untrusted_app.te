@@ -1,2 +1,0 @@
-allow untrusted_app modem_block_device:blk_file { getattr };
-allow untrusted_app sysfs:file { read };

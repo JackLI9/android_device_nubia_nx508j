@@ -1,2 +1,0 @@
-allow netmgrd netmgrd:netlink_socket { getopt };
-allow netmgrd netmgrd:capability { dac_override };

@@ -1,8 +1,0 @@
-allow tee self:capability { setuid setgid sys_rawio };
-allow tee ssd_device:blk_file rw_file_perms;
-
-allow tee firmware_file:dir r_dir_perms;
-allow tee firmware_file:file r_file_perms;
-
-# Set the sys.listeners.registered property
-set_prop(tee, system_prop)

@@ -25,13 +25,10 @@ PRODUCT_AAPT_PREF_CONFIG := xxhdpi
 $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
 
 # Inherit from those products. Most specific first.
-$(call inherit-product, $(SRC_TARGET_DIR)/product/aosp_base_telephony.mk)
+$(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 
-$(call inherit-product, frameworks/native/build/phone-xxhdpi-2048-dalvik-heap.mk)
-$(call inherit-product, frameworks/native/build/phone-xxhdpi-2048-hwui-memory.mk)
-
-# Inherit some common LineageOS stuff.
-$(call inherit-product, vendor/cm/config/common_full_phone.mk)
+# Inherit some common Lineage stuff.
+$(call inherit-product, vendor/lineage/config/common_full_phone.mk)
 
 # Inherit device configuration
 $(call inherit-product, device/nubia/nx508j/device.mk)
@@ -48,6 +45,3 @@ PRODUCT_MODEL := NX508J
 PRODUCT_MANUFACTURER := Nubia
 PRODUCT_BUILD_PROP_OVERRIDES += TARGET_DEVICE=NX508J PRODUCT_NAME=NX508J
 
-#PRODUCT_BUILD_PROP_OVERRIDES += \
-#    BUILD_FINGERPRINT=Nubia/lineage_nx508j/nx508j:7.1.2/NJH47F/d1951f8dcd:userdebug/test-keys \
-#    PRIVATE_BUILD_DESC="NX508J-user 7.1.2 Nougat release-keys"

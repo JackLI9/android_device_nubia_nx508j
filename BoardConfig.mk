@@ -31,16 +31,13 @@ TARGET_BOOTLOADER_BOARD_NAME := MSM8994
 TARGET_NO_BOOTLOADER := true
 TARGET_NO_RADIOIMAGE := true
 
-# This is a proprietary blob on 8992/8994
-TARGET_PROVIDES_KEYMASTER := true
-TARGET_KEYMASTER_WAIT_FOR_QSEE := true
 
 # Architecture
 TARGET_ARCH := arm64
 TARGET_ARCH_VARIANT := armv8-a
 TARGET_CPU_ABI := arm64-v8a
 TARGET_CPU_ABI2 :=
-TARGET_CPU_VARIANT := generic
+TARGET_CPU_VARIANT := cortex-a53
 
 # Second architecture
 TARGET_2ND_ARCH := arm
@@ -80,6 +77,7 @@ BOARD_BLUETOOTH_BDROID_HCILP_INCLUDED := false
 
 # Camera
 TARGET_NEEDS_PLATFORM_TEXT_RELOCATIONS := true
+#BOARD_QTI_CAMERA_32BIT_ONLY := true
 USE_DEVICE_SPECIFIC_CAMERA := true
 
 # Properties
@@ -90,51 +88,43 @@ BOARD_CHARGER_ENABLE_SUSPEND := true
 BOARD_CHARGER_DISABLE_INIT_BLANK := true
 
 # CM Hardware
-BOARD_USES_CYANOGEN_HARDWARE := true
-BOARD_HARDWARE_CLASS += \
-    hardware/cyanogen/cmhw \
-    $(DEVICE_PATH)/cmhw
+BOARD_USES_LINEAGE_HARDWARE := true
+BOARD_HARDWARE_CLASS += $(DEVICE_PATH)/lineagehw
 TARGET_TAP_TO_WAKE_NODE := "/data/tp/easy_wakeup_gesture"
 
-# DPM NSRM Feature
-TARGET_LDPRELOAD := libNimsWrap.so
-BOARD_USES_QCNE := true
-
 #Enable HW based full disk encryption
-TARGET_HW_DISK_ENCRYPTION := false
-
-# Enable dexpreopt to speed boot time
-ifeq ($(HOST_OS),linux)
-  ifeq ($(call match-word-in-list,$(TARGET_BUILD_VARIANT),user),true)
-    ifeq ($(WITH_DEXPREOPT),)
-      WITH_DEXPREOPT := true
-    endif
-  endif
-endif
+TARGET_HW_DISK_ENCRYPTION := true
 
 # Fonts
 EXTENDED_FONT_FOOTPRINT := true
 
 # Filesystem
-TARGET_ANDROID_FILESYSTEM_CONFIG_H := $(DEVICE_PATH)/android_filesystem_config.h
+TARGET_FS_CONFIG_GEN := $(DEVICE_PATH)/config.fs
 
 # GPS
 TARGET_NO_RPC := true
 USE_DEVICE_SPECIFIC_GPS := true
-BOARD_VENDOR_QCOM_GPS_LOC_API_HARDWARE := $(TARGET_BOARD_PLATFORM)
-BOARD_VENDOR_QCOM_LOC_PDK_FEATURE_SET := true
 
-# Display
+# Graphics
+NUM_FRAMEBUFFER_SURFACE_BUFFERS := 3
+TARGET_USES_ION := true
+TARGET_USES_NEW_ION_API :=true
+TARGET_USES_C2D_COMPOSITION := true
+TARGET_USES_HWC2 := true
+USE_OPENGL_RENDERER := true
+
 MAX_EGL_CACHE_KEY_SIZE := 12*1024
 MAX_EGL_CACHE_SIZE := 2048*1024
-MAX_VIRTUAL_DISPLAY_DIMENSION := 4096
-NUM_FRAMEBUFFER_SURFACE_BUFFERS := 3
-OVERRIDE_RS_DRIVER:= libRSDriver_adreno.so
-TARGET_FORCE_HWC_FOR_VIRTUAL_DISPLAYS := true
-TARGET_USES_ION := true
-TARGET_USES_OVERLAY := true
-TARGET_USES_C2D_COMPOSITION := true
-USE_OPENGL_RENDERER := true
+
+HAVE_ADRENO_SOURCE := false
+OVERRIDE_RS_DRIVER := libRSDriver_adreno.so
+
+VSYNC_EVENT_PHASE_OFFSET_NS := 2000000
+SF_VSYNC_EVENT_PHASE_OFFSET_NS := 6000000
+
+# HIDL
+DEVICE_MANIFEST_FILE := $(DEVICE_PATH)/manifest.xml
+DEVICE_MATRIX_FILE := $(DEVICE_PATH)/compatibility_matrix.xml
 
 # Include path
 TARGET_SPECIFIC_HEADER_PATH := $(DEVICE_PATH)/include
@@ -145,6 +135,9 @@ TARGET_PLATFORM_DEVICE_BASE := /devices/soc.0/
 
 # IPA
 USE_DEVICE_SPECIFIC_DATA_IPA_CFG_MGR := true
+
+# This is a proprietary blob on 8992/8994
+TARGET_PROVIDES_KEYMASTER := true
 
 # Kernel
 BOARD_KERNEL_CMDLINE := androidboot.hardware=qcom user_debug=31 msm_rtb.filter=0x37 ehci-hcd.park=3 lpm_levels.sleep_disabled=1 boot_cpus=0-3 #androidboot.selinux=permissive
@@ -165,7 +158,6 @@ TARGET_KERNEL_CONFIG := msm8994-NX508J_defconfig
 LZMA_RAMDISK_TARGETS := recovery,boot
 
 # Cpusets
-ENABLE_CPUSETS := true
 ENABLE_SCHED_BOOST := true
 
 # Lights
@@ -175,54 +167,47 @@ TARGET_PROVIDES_LIBLIGHT := true
 TARGET_USES_MEDIA_EXTENSIONS := true
 
 # Partitions
-BOARD_BOOTIMAGE_PARTITION_SIZE     := 0x04000000
-BOARD_CACHEIMAGE_PARTITION_SIZE    := 268435456
-BOARD_RECOVERYIMAGE_PARTITION_SIZE := 0x04000000
-BOARD_SYSTEMIMAGE_PARTITION_SIZE   := 2684354560
-BOARD_USERDATAIMAGE_PARTITION_SIZE := 11999358976
+BOARD_BOOTIMAGE_PARTITION_SIZE := 67108864
+BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE := f2fs
+BOARD_CACHEIMAGE_PARTITION_SIZE := 268435456
+BOARD_RECOVERYIMAGE_PARTITION_SIZE := 67108864
+BOARD_SYSTEMIMAGE_PARTITION_SIZE := 2684354560
+BOARD_USERDATAIMAGE_PARTITION_SIZE := 59047394304
+BOARD_FLASH_BLOCK_SIZE := 262144
 TARGET_USERIMAGES_USE_EXT4 := true
 TARGET_USERIMAGES_USE_F2FS := true
-BOARD_FLASH_BLOCK_SIZE := 131072
-
-
-#Peripheral manager is enabled on this target
-#This flag means that peripheral manager is enabled
-#is controlling the power on/off on certain peripherals.
-TARGET_PER_MGR_ENABLED := true
+TARGET_USES_MKE2FS := true
 
 # Power
-TARGET_POWERHAL_SET_INTERACTIVE_EXT := $(DEVICE_PATH)/power/power_ext.c
-TARGET_POWERHAL_VARIANT := qcom
+TARGET_HAS_NO_WIFI_STATS := true
+TARGET_RPM_SYSTEM_STAT := /d/rpm_stats
+TARGET_USES_INTERACTION_BOOST := true
 
-# Qualcomm support
+# QCOM hardware
 BOARD_USES_QCOM_HARDWARE := true
 
 # Recovery
-#RECOVERY_VARIANT := twrp
-ifneq ($(RECOVERY_VARIANT),twrp)
-  TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/rootdir/etc/fstab.qcom
-else
-  TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/twrp/twrp.fstab
+RECOVERY_VARIANT := twrp
+TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/rootdir/etc/fstab.qcom
+ifeq ($(RECOVERY_VARIANT),twrp)
+  #TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/twrp/twrp.fstab
   # TWRP_CN
   #TW_CUSTOM_THEME := $(DEVICE_PATH)/twrp/twres
   TW_THEME := portrait_hdpi
   BOARD_HAS_NO_REAL_SDCARD := true
-  TW_USE_TOOLBOX := true
   TARGET_RECOVERY_QCOM_RTC_FIX := true
-  TARGET_RECOVERY_PIXEL_FORMAT := "RGBX_8888"
-  TW_BRIGHTNESS_PATH := /sys/class/leds/lcd-backlight/brightness
   TW_EXTRA_LANGUAGES := true
+  TW_DEFAULT_LANGUAGE := en
+  TWRP_INCLUDE_LOGCAT := true
+  TARGET_USES_LOGD := true
+  TW_USE_TOOLBOX := true
   TW_EXCLUDE_TWRPAPP := true
   BOARD_SUPPRESS_SECURE_ERASE := true
   TWRP_NEW_THEME := true
   TW_INCLUDE_FB2PNG := true
   TW_INCLUDE_CRYPTO := true
-  RECOVERY_GRAPHICS_USE_LINELENGTH := true
-  TW_TARGET_USES_QCOM_BSP := true
-  # DEBUG (BOTH needed to enable logcat)
-  TWRP_INCLUDE_LOGCAT := true
-  TARGET_USES_LOGD := true
-  TW_NEW_ION_HEAP := true
+  TW_BRIGHTNESS_PATH := /sys/class/leds/lcd-backlight/brightness
+  TW_SCREEN_BLANK_ON_BOOT := true
 endif
 
 # Added to indicate that protobuf-c is supported in this build
@@ -230,32 +215,43 @@ PROTOBUF_SUPPORTED := true
 
 # SELinux
 include device/qcom/sepolicy/sepolicy.mk
+include device/qcom/sepolicy/legacy-sepolicy.mk
 BOARD_SEPOLICY_DIRS += \
     $(DEVICE_PATH)/sepolicy
 
-# Time services
-BOARD_USES_QC_TIME_SERVICES := true
+# Shims
+TARGET_LD_SHIM_LIBS := \
+    /system/vendor/lib64/lib-imsvt.so|libshim_ims.so \
+    /system/vendor/lib64/lib-imsvt.so|libshim_camera.so \
+    /system/lib/hw/camera.msm8994.so|libshim_camera.so \
+    /system/vendor/lib/libmmcamera2_stats_modules.so|libshim_cald.so \
+    /system/vendor/lib64/libril-qc-qmi-1.so|rild_socket.so
+
+# VR
+USE_DEVICE_SPECIFIC_VR := true
 
 # WiFi
-BOARD_HAS_QCOM_WLAN              := true
-BOARD_HAS_QCOM_WLAN_SDK          := true
-BOARD_HOSTAPD_DRIVER             := NL80211
-BOARD_HOSTAPD_PRIVATE_LIB        := lib_driver_cmd_qcwcn
-BOARD_WLAN_DEVICE                := qcwcn
-BOARD_WPA_SUPPLICANT_DRIVER      := NL80211
-BOARD_WPA_SUPPLICANT_PRIVATE_LIB := lib_driver_cmd_qcwcn
+BOARD_HAS_QCOM_WLAN := true
+BOARD_WLAN_DEVICE := qcwcn
+BOARD_HOSTAPD_DRIVER := NL80211
+BOARD_HOSTAPD_PRIVATE_LIB := lib_driver_cmd_$(BOARD_WLAN_DEVICE)
+BOARD_WPA_SUPPLICANT_DRIVER := NL80211
+BOARD_WPA_SUPPLICANT_PRIVATE_LIB := lib_driver_cmd_$(BOARD_WLAN_DEVICE)
+TARGET_USES_WCNSS_CTRL := true
+TARGET_USES_QCOM_WCNSS_QMI := true
+WIFI_DRIVER_FW_PATH_AP := "ap"
+WIFI_DRIVER_FW_PATH_STA := "sta"
+WPA_SUPPLICANT_VERSION := VER_0_8_X
 
-TARGET_USES_QCOM_WCNSS_QMI       := true
-TARGET_USES_WCNSS_MAC_ADDR_REV   := true
-WIFI_DRIVER_FW_PATH_STA          := "sta"
-WIFI_DRIVER_FW_PATH_AP           := "ap"
-WIFI_DRIVER_MODULE_PATH          := "/system/lib/modules/wlan.ko"
-WIFI_DRIVER_MODULE_NAME          := "wlan"
-WPA_SUPPLICANT_VERSION           := VER_0_8_X
-
-CONFIG_EAP_PROXY := qmi
-CONFIG_EAP_PROXY_AKA_PRIME := true
-CONFIG_EAP_PROXY_MSM8994_TARGET := true
+# Dexpreopt
+ifeq ($(HOST_OS),linux)
+  ifneq ($(TARGET_BUILD_VARIANT),eng)
+    ifeq ($(WITH_DEXPREOPT),)
+      WITH_DEXPREOPT := true
+      WITH_DEXPREOPT_BOOT_IMG_AND_SYSTEM_SERVER_ONLY := true
+    endif
+  endif
+endif
 
 # inherit from the proprietary version
 include vendor/nubia/nx508j/BoardConfigVendor.mk
