@@ -207,22 +207,19 @@ else
   #TW_CUSTOM_THEME := $(DEVICE_PATH)/twrp/twres
   TW_THEME := portrait_hdpi
   BOARD_HAS_NO_REAL_SDCARD := true
-  TW_USE_TOOLBOX := true
   TARGET_RECOVERY_QCOM_RTC_FIX := true
-  TARGET_RECOVERY_PIXEL_FORMAT := "RGBX_8888"
-  TW_BRIGHTNESS_PATH := /sys/class/leds/lcd-backlight/brightness
   TW_EXTRA_LANGUAGES := true
+  TW_DEFAULT_LANGUAGE := en
+  TWRP_INCLUDE_LOGCAT := true
+  TARGET_USES_LOGD := true
+  TW_USE_TOOLBOX := true
   TW_EXCLUDE_TWRPAPP := true
   BOARD_SUPPRESS_SECURE_ERASE := true
   TWRP_NEW_THEME := true
   TW_INCLUDE_FB2PNG := true
   TW_INCLUDE_CRYPTO := true
-  RECOVERY_GRAPHICS_USE_LINELENGTH := true
-  TW_TARGET_USES_QCOM_BSP := true
-  # DEBUG (BOTH needed to enable logcat)
-  TWRP_INCLUDE_LOGCAT := true
-  TARGET_USES_LOGD := true
-  TW_NEW_ION_HEAP := true
+  TW_BRIGHTNESS_PATH := /sys/class/leds/lcd-backlight/brightness
+  TW_SCREEN_BLANK_ON_BOOT := true
 endif
 
 # Added to indicate that protobuf-c is supported in this build
