@@ -1,8 +1,6 @@
-allow init proc_dirty_ratio:file write;
-allow init firmware_file:blk_file read;
-allow init self:netlink_route_socket { create nlmsg_read read write };
-allow init ipa_dev:chr_file { ioctl open read };
-allow init proc_kernel_sched:file write;
-
-# required for LD_SHIM_LIBS
-allow init { domain -lmkd -crash_dump }:process noatsecure;
+allow init sysfs_leds:lnk_file read;
+allow init { atmelts_exec touchp_exec atmelts }:file { getattr open write setattr };
+allow init sysfs:file { open read setattr };
+allow init { hidl_base_hwservice hal_power_stats_hwservice }:hwservice_manager { add };
+allow init hwservicemanager:binder { call transfer };
+allow init system_data_root_file:lnk_file { open read };

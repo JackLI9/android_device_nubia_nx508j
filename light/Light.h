@@ -32,30 +32,33 @@ namespace implementation {
 
 struct Light : public ILight {
     Light(std::pair<std::ofstream, uint32_t>&& lcd_backlight,
-          std::vector<std::ofstream>&& button_backlight,
+          std::ofstream&& button_backlight,
           std::ofstream&& red_led,
           std::ofstream&& red_duty_pcts,
           std::ofstream&& red_start_idx,
           std::ofstream&& red_pause_lo,
           std::ofstream&& red_pause_hi,
           std::ofstream&& red_ramp_step_ms,
-          std::ofstream&& red_blink);
+          std::ofstream&& red_blink,
+          std::ofstream&& red_lut_flags,
+          std::ofstream&& red_outn,
+          std::ifstream&& battery_capacity,
+          std::ifstream&& battery_charging_status);
 
     // Methods from ::android::hardware::light::V2_0::ILight follow.
     Return<Status> setLight(Type type, const LightState& state) override;
     Return<void> getSupportedTypes(getSupportedTypes_cb _hidl_cb) override;
 
   private:
-    void setAttentionLight(const LightState& state);
     void setBatteryLight(const LightState& state);
     void setButtonsBacklight(const LightState& state);
     void setLcdBacklight(const LightState& state);
     void setNotificationLight(const LightState& state);
     void setSpeakerBatteryLightLocked();
-    void setSpeakerLightLocked(const LightState& state);
+    void setSpeakerLightLocked(int event_source, const LightState& state);
 
     std::pair<std::ofstream, uint32_t> mLcdBacklight;
-    std::vector<std::ofstream> mButtonBacklight;
+    std::ofstream mButtonBacklight;
     std::ofstream mRedLed;
     std::ofstream mRedDutyPcts;
     std::ofstream mRedStartIdx;
@@ -63,8 +66,12 @@ struct Light : public ILight {
     std::ofstream mRedPauseHi;
     std::ofstream mRedRampStepMs;
     std::ofstream mRedBlink;
+    std::ofstream mRedLutFlags;
+    std::ofstream mRedOutn;
+    std::ifstream mBatteryCapacity;
+    std::ifstream mBatteryChargingStatus;
 
-    LightState mAttentionState;
+    LightState mButtonState;
     LightState mBatteryState;
     LightState mNotificationState;
 

@@ -13,15 +13,17 @@ on early-init
     write /sys/module/msm_thermal/core_control/enabled 1
 #ZTEMT end
 
+on fs
+    wait /dev/block/platform/soc.0/f9824900.sdhci
+    symlink /dev/block/platform/soc.0/f9824900.sdhci /dev/block/bootdevice
+    setprop sys.usb.ffs.aio_compat 1
+    setprop persist.adb.nonblocking_ffs 0
+    setprop ro.adb.nonblocking_ffs 0
+
 on init
     # Support legacy paths
     symlink /sdcard /mnt/sdcard
     symlink /sdcard /storage/sdcard0
-#    mkdir /boot
-#    mkdir /recovery
-#    mkdir /recovery2
-#    mkdir /misc
-#    mkdir /persist
 
 service tp_node /sbin/sh /tp_node.sh
     oneshot

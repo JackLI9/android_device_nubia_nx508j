@@ -1,4 +1,4 @@
-#!/system/bin/sh
+#!/vendor/bin/sh
 # Copyright (c) 2014, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -38,8 +38,8 @@ cards=("0" "0")
 found_num=0
 
 # Run usf_settings script
-if [ -f /system/etc/usf_settings.sh ]; then
-  source /system/etc/usf_settings.sh
+if [ -f /system/vendor/bin/usf_settings.sh ]; then
+  source /system/vendor/bin/usf_settings.sh
 fi
 
 while read pcm_entry; do

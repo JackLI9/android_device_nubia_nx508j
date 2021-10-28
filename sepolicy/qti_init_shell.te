@@ -1,3 +1,6 @@
 allow qti_init_shell kmsg_device:chr_file { write open };
 allow qti_init_shell proc_net:dir { open read };
 allow qti_init_shell { sysfs sysfs_kgsl sysfs_kgsl }:file write;
+allow qti_init_shell proc_kernel_sched:file { open read write };
+allow qti_init_shell sysfs_android_usb:file { write };
+allow qti_init_shell file_contexts_file:file { open read getattr };

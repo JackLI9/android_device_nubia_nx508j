@@ -1,2 +1,4 @@
 allow rild nv_data_file:file { create open write };
 allow rild nv_data_file:dir { add_name getattr search write };
+allow rild diag_prop:file { open read getattr };
+allow rild vendor_file:file { open read ioctl };

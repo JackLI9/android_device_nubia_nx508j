@@ -1,21 +1,11 @@
-# GPS
-persist.gps.qc_nlp_in_use=1
-persist.loc.nlp_name=com.qualcomm.location
-ro.gps.agps_provider=1
-ro.pip.gated=0
-
-# IMS
-persist.dbg.ims_volte_enable=1
-persist.dbg.volte_avail_ovr=1
-persist.dbg.vt_avail_ovr=1
 
 # Camera
 #camera.disable_zsl_mode=1
 #persist.camera.HAL3.enabled=1
-#persist.camera.hal.debug.mask=0
-#persist.camera.raw.format=16
-#persist.camera.zsl.mode=0
-#persist.camera.tintless=enable
+
+
+# Memory optimizations
+ro.vendor.qti.sys.fw.bservice_enable=true
 
 # QC vendor extension
 ro.vendor.extension_library=libqti-perfd-client.so
@@ -39,7 +29,7 @@ persist.rild.nitz_short_ons_3=
 ril.subscription.types=NV,RUIM
 DEVICE_PROVISIONED=1
 telephony.lteOnGsmDevice=1
-persist.radio.add_power_save=1
+persist.radio.add_power_save=0
 persist.radio.multisim.config=dsds
 persist.radio.apm_sim_not_pwdn=1
 persist.radio.sib16_support=1
@@ -140,8 +130,9 @@ bluetooth.hfp.client=1
 #
 persist.fuse_sdcard=true
 
-#system prop for Bluetooth SOC type
-qcom.bluetooth.soc=rome
+# Bluetooth
+bluetooth.enable_timeout_ms=12000
+vendor.qcom.bluetooth.soc=rome
 
 #system prop for A4WP profile support
 ro.bluetooth.a4wp=true
@@ -155,9 +146,9 @@ ro.bluetooth.wipower=true
 ro.qc.sdk.audio.ssr=false
 ##fluencetype can be "fluence" or "fluencepro" or "none"
 ro.qc.sdk.audio.fluencetype=fluence
-persist.audio.fluence.voicecall=true
-persist.audio.fluence.voicerec=false
-persist.audio.fluence.speaker=false
+persist.vendor.audio.fluence.voicecall=true
+persist.vendor.audio.fluence.voicerec=false
+persist.vendor.audio.fluence.speaker=false
 
 ro.qc.sdk.sensors.gestures=true
 ro.qc.sdk.gestures.camera=false
@@ -172,9 +163,9 @@ persist.sys.wfd.zte_resolution=1
 persist.sys.wfd.zsink_support=1
 #property this is device support wfd 1080p output support(true)  not support(false)
 persist.sys.wfd.1080p_support=true
-tunnel.audio.encode = false
+vendor.tunnel.audio.encode = false
 #enable gapless by default
-audio.offload.gapless.enabled=true
+vendor.audio.offload.gapless.enabled=true
 
 #Buffer size in kbytes for compress offload playback
 audio.offload.buffer.size.kb=32
@@ -198,7 +189,7 @@ sys.games.gt.prof=1
 sys.apps.hwaccel.enable=1
 
 #enable voice path for PCM VoIP by default
-use.voice.path.for.pcm.voip=true
+vendor.voice.path.for.pcm.voip=true
 
 #selects CoreSight configuration to enable
 persist.debug.coresight.config=none
@@ -217,14 +208,11 @@ audio.ds1.metainfo.key=273
 #enable property for hard bypass
 audio.dolby.ds2.hardbypass=true
 
-audio.offload.passthrough=false
-audio.offload.multiple.enabled=true
+vendor.audio.offload.passthrough=false
+vendor.audio.offload.multiple.enabled=true
 #set primary card enabled
 persist.radio.primarycard=true
 #/* ZTEMT START */
-#property to support SSR && AP RESET when kernel panic.(1,1) to disable, (3,0) to enable
-persist.sys.ssr.restart_level=3
-persist.sys.ap.restart_level=0
 
 # ZTEMT ADD cdma default sub
 ro.telephony.default_cdma_sub=0
@@ -238,7 +226,13 @@ persist.sys.devicename=nubia Z9
 #persist.sys.exif.model=nubia smart phone
 #device name for camera picture
 ro.config.devicename=nubia Z9
-
-#add model number
-persist.sys.modelnumber=NX508J
+ro.debuggable=1
+ro.secure=0
+#ro.apex.updatable=false
+#ro.lmk.critical_upgrade=true
+#ro.lmk.downgrade_pressure=60
+#ro.lmk.kill_heaviest_task=false
+#ro.lmk.log_stats=true
+#ro.lmk.upgrade_pressure=40
+#ro.lmk.use_psi=false
 

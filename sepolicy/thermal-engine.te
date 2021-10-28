@@ -1,3 +1,4 @@
 allow thermal-engine property_socket:sock_file write;
 allow thermal-engine init:unix_stream_socket connectto;
-allow thermal-engine system_prop:property_service set;
+allow thermal-engine { diag_prop system_prop }:property_service set;
+allow thermal-engine diag_prop:file { read };

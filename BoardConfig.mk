@@ -1,5 +1,5 @@
 # Copyright (C) 2015 The CyanogenMod Project
-# Copyright (C) 2017 The LineageOS Project
+# Copyright (C) 2017-2021 The LineageOS Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,16 +21,16 @@
 
 DEVICE_PATH := device/nubia/nx508j
 
-# Platform
-TARGET_BOARD_PLATFORM := msm8994
-TARGET_BOARD_PLATFORM_GPU := qcom-adreno430
-TARGET_BOARD_SUFFIX := _64
+BOARD_VENDOR := nubia
 
 # Bootloader
 TARGET_BOOTLOADER_BOARD_NAME := MSM8994
 TARGET_NO_BOOTLOADER := true
 TARGET_NO_RADIOIMAGE := true
 
+# Platform
+TARGET_BOARD_PLATFORM := msm8994
+TARGET_BOARD_PLATFORM_GPU := qcom-adreno430
 
 # Architecture
 TARGET_ARCH := arm64
@@ -41,21 +41,57 @@ TARGET_CPU_VARIANT := cortex-a53
 
 # Second architecture
 TARGET_2ND_ARCH := arm
-TARGET_2ND_ARCH_VARIANT := armv7-a-neon
+TARGET_2ND_ARCH_VARIANT := armv8-a
 TARGET_2ND_CPU_ABI := armeabi-v7a
 TARGET_2ND_CPU_ABI2 := armeabi
-TARGET_2ND_CPU_VARIANT := cortex-a53.a57
+TARGET_2ND_CPU_VARIANT := cortex-a53
 
 TARGET_USES_64_BIT_BINDER := true
 
-# ANT+
-BOARD_ANT_WIRELESS_DEVICE := "qualcomm-uart"
+# Kernel
+BOARD_KERNEL_CMDLINE := androidboot.hardware=qcom user_debug=31 msm_rtb.filter=0x37 ehci-hcd.park=3 lpm_levels.sleep_disabled=1 boot_cpus=0-3  loop.max_part=7 androidboot.selinux=permissive
+BOARD_KERNEL_SEPARATED_DT := true
+BOARD_KERNEL_BASE        := 0x00000000
+BOARD_KERNEL_PAGESIZE    := 4096
+BOARD_KERNEL_TAGS_OFFSET := 0x00000100
+BOARD_RAMDISK_OFFSET := 0x02000000
+BOARD_KERNEL_IMAGE_NAME := Image
+TARGET_KERNEL_ARCH := arm64
+TARGET_KERNEL_HEADER_ARCH := arm64
+BOARD_DTBTOOL_ARGS := -2
+#TARGET_KERNEL_SOURCE := kernel/nubia/msm8994
+TARGET_KERNEL_SOURCE := kernel/nubia/android_kernel_nubia_msm8994
+TARGET_KERNEL_CONFIG := msm8994-NX508J_defconfig
+LZMA_RAMDISK_TARGETS := recovery,boot
 
 # Audio
-DOLBY_ENABLE := true
+# DOLBY_ENABLE := true
+# USE_CUSTOM_AUDIO_POLICY := 1
+# USE_XML_AUDIO_POLICY_CONF := 1
+# DOLBY_UDC := true
+# DS1_DOLBY_DAP := true
+AUDIO_FEATURE_ENABLED_ACDB_LICENSE := true
+AUDIO_FEATURE_ENABLED_COMPRESS_CAPTURE := true
+AUDIO_FEATURE_ENABLED_COMPRESS_VOIP := true
+AUDIO_FEATURE_ENABLED_DS2_DOLBY_DAP := false
+AUDIO_FEATURE_ENABLED_DTS_EAGLE := false
+AUDIO_FEATURE_ENABLED_EXTENDED_COMPRESS_FORMAT := true
+AUDIO_FEATURE_ENABLED_EXTN_FORMATS := true
+AUDIO_FEATURE_ENABLED_FLAC_OFFLOAD := true
+AUDIO_FEATURE_ENABLED_FLUENCE := true
+AUDIO_FEATURE_ENABLED_HFP := true
+AUDIO_FEATURE_ENABLED_INCALL_MUSIC := false
+AUDIO_FEATURE_ENABLED_KPI_OPTIMIZE := true
+AUDIO_FEATURE_ENABLED_MULTI_VOICE_SESSIONS := true
+AUDIO_FEATURE_ENABLED_PCM_OFFLOAD := true
+AUDIO_FEATURE_ENABLED_PCM_OFFLOAD_24 := true
+AUDIO_FEATURE_ENABLED_PROXY_DEVICE := true
+
+AUDIO_USE_LL_AS_PRIMARY_OUTPUT := true
+BOARD_SUPPORTS_SOUND_TRIGGER := true
+BOARD_USES_ALSA_AUDIO := true
 USE_CUSTOM_AUDIO_POLICY := 1
-DOLBY_UDC := true
-DS1_DOLBY_DAP := true
+USE_XML_AUDIO_POLICY_CONF := 1
 
 # Sound
 # Lollipop Audio HAL is incompatible with Android M (see http://review.cyanogenmod.org/#/c/121831/)
@@ -75,9 +111,12 @@ QCOM_BT_USE_BTNV := true
 BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(DEVICE_PATH)/bluetooth
 BOARD_BLUETOOTH_BDROID_HCILP_INCLUDED := false
 
+# LMKD stats logging
+TARGET_LMKD_STATS_LOG := true
+
 # Camera
-TARGET_NEEDS_PLATFORM_TEXT_RELOCATIONS := true
-#BOARD_QTI_CAMERA_32BIT_ONLY := true
+TARGET_PROCESS_SDK_VERSION_OVERRIDE := \
+    /system/vendor/bin/mm-qcamera-daemon=22
 USE_DEVICE_SPECIFIC_CAMERA := true
 
 # Properties
@@ -86,11 +125,6 @@ TARGET_SYSTEM_PROP += $(DEVICE_PATH)/system.prop
 # Charger
 BOARD_CHARGER_ENABLE_SUSPEND := true
 BOARD_CHARGER_DISABLE_INIT_BLANK := true
-
-# CM Hardware
-BOARD_USES_LINEAGE_HARDWARE := true
-BOARD_HARDWARE_CLASS += $(DEVICE_PATH)/lineagehw
-TARGET_TAP_TO_WAKE_NODE := "/data/tp/easy_wakeup_gesture"
 
 #Enable HW based full disk encryption
 TARGET_HW_DISK_ENCRYPTION := true
@@ -101,36 +135,50 @@ EXTENDED_FONT_FOOTPRINT := true
 # Filesystem
 TARGET_FS_CONFIG_GEN := $(DEVICE_PATH)/config.fs
 
-# GPS
-TARGET_NO_RPC := true
-USE_DEVICE_SPECIFIC_GPS := true
+# Display
+TARGET_SCREEN_DENSITY := 480
 
 # Graphics
-NUM_FRAMEBUFFER_SURFACE_BUFFERS := 3
-TARGET_USES_ION := true
-TARGET_USES_NEW_ION_API :=true
-TARGET_USES_C2D_COMPOSITION := true
-TARGET_USES_HWC2 := true
+BOARD_USES_ADRENO := true
 USE_OPENGL_RENDERER := true
-
-MAX_EGL_CACHE_KEY_SIZE := 12*1024
-MAX_EGL_CACHE_SIZE := 2048*1024
-
-HAVE_ADRENO_SOURCE := false
-OVERRIDE_RS_DRIVER := libRSDriver_adreno.so
-
+TARGET_USES_ION := true
+TARGET_USES_C2D_COMPOSITION := true
+TARGET_USES_GRALLOC1_ADAPTER := true
+TARGET_FORCE_HWC_FOR_VIRTUAL_DISPLAYS := true
+MAX_VIRTUAL_DISPLAY_DIMENSION := 2048
+TARGET_USES_HWC2 := true
 VSYNC_EVENT_PHASE_OFFSET_NS := 2000000
 SF_VSYNC_EVENT_PHASE_OFFSET_NS := 6000000
+NUM_FRAMEBUFFER_SURFACE_BUFFERS := 3
+
+BOARD_EGL_CFG := $(DEVICE_PATH)/configs/egl.cfg
+
+# Shader cache config options
+# Maximum size of the  GLES Shaders that can be cached for reuse.
+# Increase the size if shaders of size greater than 12KB are used.
+MAX_EGL_CACHE_KEY_SIZE := 12*1024
+
+# Maximum GLES shader cache size for each app to store the compiled shader
+# binaries. Decrease the size if RAM or Flash Storage size is a limitation
+# of the device.
+MAX_EGL_CACHE_SIZE := 2048*1024
+HAVE_ADRENO_SOURCE:= false
+OVERRIDE_RS_DRIVER:= libRSDriver_adreno.so
+
+# DRM
+TARGET_ENABLE_MEDIADRM_64 := true
 
 # HIDL
 DEVICE_MANIFEST_FILE := $(DEVICE_PATH)/manifest.xml
 DEVICE_MATRIX_FILE := $(DEVICE_PATH)/compatibility_matrix.xml
+PRODUCT_ENFORCE_VINTF_MANIFEST_OVERRIDE := true
 
 # Include path
-TARGET_SPECIFIC_HEADER_PATH := $(DEVICE_PATH)/include
+TARGET_SPECIFIC_HEADER_PATH += $(DEVICE_PATH)/include
 
 # Init
-TARGET_INIT_VENDOR_LIB := libinit_nx508j
+TARGET_INIT_VENDOR_LIB ?= //$(DEVICE_PATH):init_nx508j
+TARGET_RECOVERY_DEVICE_MODULES ?= init_nx508j
 TARGET_PLATFORM_DEVICE_BASE := /devices/soc.0/
 
 # IPA
@@ -139,26 +187,8 @@ USE_DEVICE_SPECIFIC_DATA_IPA_CFG_MGR := true
 # This is a proprietary blob on 8992/8994
 TARGET_PROVIDES_KEYMASTER := true
 
-# Kernel
-BOARD_KERNEL_CMDLINE := androidboot.hardware=qcom user_debug=31 msm_rtb.filter=0x37 ehci-hcd.park=3 lpm_levels.sleep_disabled=1 boot_cpus=0-3 #androidboot.selinux=permissive
-BOARD_KERNEL_SEPARATED_DT := true
-BOARD_KERNEL_BASE        := 0x00000000
-BOARD_KERNEL_PAGESIZE    := 4096
-BOARD_KERNEL_TAGS_OFFSET := 0x00000100
-BOARD_RAMDISK_OFFSET := 0x02000000
-BOARD_KERNEL_OFFSET = 0x00008000
-TARGET_KERNEL_ARCH := arm64
-TARGET_KERNEL_HEADER_ARCH := arm64
-TARGET_KERNEL_CROSS_COMPILE_PREFIX := aarch64-linux-android-
-BOARD_DTBTOOL_ARGS := -2
-BOARD_KERNEL_IMAGE_NAME := Image
-BOARD_MKBOOTIMG_ARGS := --ramdisk_offset $(BOARD_RAMDISK_OFFSET) --tags_offset $(BOARD_KERNEL_TAGS_OFFSET)
-TARGET_KERNEL_SOURCE := kernel/nubia/msm8994
-TARGET_KERNEL_CONFIG := msm8994-NX508J_defconfig
-LZMA_RAMDISK_TARGETS := recovery,boot
-
 # Cpusets
-ENABLE_SCHED_BOOST := true
+#ENABLE_SCHED_BOOST := true
 
 # Lights
 TARGET_PROVIDES_LIBLIGHT := true
@@ -171,6 +201,7 @@ BOARD_BOOTIMAGE_PARTITION_SIZE := 67108864
 BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE := f2fs
 BOARD_CACHEIMAGE_PARTITION_SIZE := 268435456
 BOARD_RECOVERYIMAGE_PARTITION_SIZE := 67108864
+BOARD_ROOT_EXTRA_FOLDERS := firmware bt_firmware persist
 BOARD_SYSTEMIMAGE_PARTITION_SIZE := 2684354560
 BOARD_USERDATAIMAGE_PARTITION_SIZE := 59047394304
 BOARD_FLASH_BLOCK_SIZE := 262144
@@ -179,9 +210,7 @@ TARGET_USERIMAGES_USE_F2FS := true
 TARGET_USES_MKE2FS := true
 
 # Power
-TARGET_HAS_NO_WIFI_STATS := true
-TARGET_RPM_SYSTEM_STAT := /d/rpm_stats
-TARGET_USES_INTERACTION_BOOST := true
+TARGET_TAP_TO_WAKE_NODE := "/data/tp/easy_wakeup_gesture"
 
 # QCOM hardware
 BOARD_USES_QCOM_HARDWARE := true
@@ -194,6 +223,8 @@ ifeq ($(RECOVERY_VARIANT),twrp)
   # TWRP_CN
   #TW_CUSTOM_THEME := $(DEVICE_PATH)/twrp/twres
   TW_THEME := portrait_hdpi
+  TARGET_SCREEN_WIDTH := 1080
+  TARGET_SCREEN_HEIGHT := 1920
   BOARD_HAS_NO_REAL_SDCARD := true
   TARGET_RECOVERY_QCOM_RTC_FIX := true
   TW_EXTRA_LANGUAGES := true
@@ -211,24 +242,18 @@ ifeq ($(RECOVERY_VARIANT),twrp)
 endif
 
 # Added to indicate that protobuf-c is supported in this build
-PROTOBUF_SUPPORTED := true
+#PROTOBUF_SUPPORTED := true
 
 # SELinux
-include device/qcom/sepolicy/sepolicy.mk
-include device/qcom/sepolicy/legacy-sepolicy.mk
-BOARD_SEPOLICY_DIRS += \
-    $(DEVICE_PATH)/sepolicy
+include device/qcom/sepolicy-legacy/sepolicy.mk
+BOARD_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy
 
 # Shims
 TARGET_LD_SHIM_LIBS := \
-    /system/vendor/lib64/lib-imsvt.so|libshim_ims.so \
-    /system/vendor/lib64/lib-imsvt.so|libshim_camera.so \
     /system/lib/hw/camera.msm8994.so|libshim_camera.so \
     /system/vendor/lib/libmmcamera2_stats_modules.so|libshim_cald.so \
+    /system/vendor/lib/libmmcamera2_sensor_modules.so|libshim_atomic.so \
     /system/vendor/lib64/libril-qc-qmi-1.so|rild_socket.so
-
-# VR
-USE_DEVICE_SPECIFIC_VR := true
 
 # WiFi
 BOARD_HAS_QCOM_WLAN := true
@@ -241,6 +266,7 @@ TARGET_USES_WCNSS_CTRL := true
 TARGET_USES_QCOM_WCNSS_QMI := true
 WIFI_DRIVER_FW_PATH_AP := "ap"
 WIFI_DRIVER_FW_PATH_STA := "sta"
+WIFI_HIDL_FEATURE_DISABLE_AP_MAC_RANDOMIZATION := true
 WPA_SUPPLICANT_VERSION := VER_0_8_X
 
 # Dexpreopt

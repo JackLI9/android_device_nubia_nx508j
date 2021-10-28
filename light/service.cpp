@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#define LOG_TAG "android.hardware.light@2.0-service.oneplus2"
+#define LOG_TAG "android.hardware.light@2.0-service.nx508j"
 
 #include <android-base/logging.h>
 #include <hidl/HidlTransportSupport.h>
@@ -40,10 +40,13 @@ const static std::string kRedPauseLoPath = "/sys/class/leds/nubia_led/pause_lo";
 const static std::string kRedPauseHiPath = "/sys/class/leds/nubia_led/pause_hi";
 const static std::string kRedRampStepMsPath = "/sys/class/leds/nubia_led/ramp_step_ms";
 const static std::string kRedBlinkPath = "/sys/class/leds/nubia_led/blink_mode";
+const static std::string kRedLutFlagsPath = "/sys/class/leds/nubia_led/lut_flags";
+const static std::string kRedOutnPath = "/sys/class/leds/nubia_led/outn";
+const static std::string kBatteryCapacityPath = "/sys/class/power_supply/battery/capacity";
+const static std::string kBatteryChargingStatusPath = "/sys/class/power_supply/battery/status";
 
 int main() {
     uint32_t lcdMaxBrightness = 255;
-    std::vector<std::ofstream> buttonBacklight;
 
     std::ofstream lcdBacklight(kLcdBacklightPath);
     if (!lcdBacklight) {
@@ -61,10 +64,8 @@ int main() {
         lcdMaxBacklight >> lcdMaxBrightness;
     }
 
-    std::ofstream button1Backlight(kButton1BacklightPath);
-    if (button1Backlight) {
-        buttonBacklight.emplace_back(std::move(button1Backlight));
-    } else {
+    std::ofstream buttonBacklight(kButton1BacklightPath);
+    if (!buttonBacklight) {
         LOG(WARNING) << "Failed to open " << kButton1BacklightPath << ", error=" << errno
                      << " (" << strerror(errno) << ")";
     }
@@ -118,15 +119,48 @@ int main() {
         return -errno;
     }
 
+    std::ofstream redLutFlags(kRedLutFlagsPath);
+    if (!redLutFlags) {
+        LOG(ERROR) << "Failed to open " << kRedLutFlagsPath << ", error=" << errno
+                   << " (" << strerror(errno) << ")";
+        return -errno;
+    }
+
+    std::ofstream redOutn(kRedOutnPath);
+    if (!redOutn) {
+        LOG(ERROR) << "Failed to open " << kRedOutnPath << ", error=" << errno
+                   << " (" << strerror(errno) << ")";
+        return -errno;
+    }
+
+    std::ifstream batteryCapacity(kBatteryCapacityPath);
+    if (!batteryCapacity) {
+        LOG(ERROR) << "Failed to open " << kBatteryCapacityPath << ", error=" << errno
+                   << " (" << strerror(errno) << ")";
+        return -errno;
+    }
+
+    std::ifstream batteryChargingStatus(kBatteryChargingStatusPath);
+    if (!batteryChargingStatus) {
+        LOG(ERROR) << "Failed to open " << kBatteryChargingStatusPath << ", error=" << errno
+                   << " (" << strerror(errno) << ")";
+        return -errno;
+    }
+
     android::sp<ILight> service = new Light(
-            {std::move(lcdBacklight), lcdMaxBrightness}, std::move(buttonBacklight),
+            {std::move(lcdBacklight), lcdMaxBrightness}, 
+            std::move(buttonBacklight),
             std::move(redLed),
             std::move(redDutyPcts), 
             std::move(redStartIdx), 
             std::move(redPauseLo),
             std::move(redPauseHi),
             std::move(redRampStepMs),
-            std::move(redBlink));
+            std::move(redBlink),
+            std::move(redLutFlags),
+            std::move(redOutn),
+            std::move(batteryCapacity),
+            std::move(batteryChargingStatus));
 
     configureRpcThreadpool(1, true);
 

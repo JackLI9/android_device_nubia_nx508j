@@ -1,1 +1,2 @@
-allow ims system_prop:property_service set;
+allow ims { diag_prop system_prop }:property_service set;
+allow ims diag_prop:file { open read getattr };

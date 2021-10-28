@@ -1,8 +1,8 @@
 on boot
     # execute script to set initial CPU settings
     # don't run as a service to avoid race conditions
-    #exec - root root system -- /system/bin/init.nx508j.power.sh
-    start nx508j-power
+    #exec - root root system -- /system/vendor/bin/init.nx508j.power.sh
+    #start nx508j-power
 
 on charger
     write /sys/devices/system/cpu/cpu4/online 1
@@ -21,10 +21,12 @@ on charger
     write /sys/module/msm_thermal/core_control/enabled 1
     write /sys/module/lpm_levels/parameters/sleep_disabled 0
 
-service charger /charger
+service charger /system/bin/charger
     class charger
-    group log
-    seclabel u:r:healthd:s0
+    user system
+    group system graphics input
+    capabilities SYS_BOOT
+    seclabel u:r:charger:s0
     writepid /dev/cpuset/system-background/tasks
 
 service nx508j-power /system/vendor/bin/sh /system/vendor/bin/init.nx508j.power.sh

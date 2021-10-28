@@ -1,0 +1,1 @@
+allow ims sensors:file { open read getattr };

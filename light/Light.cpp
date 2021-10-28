@@ -20,6 +20,32 @@
 
 #include <android-base/logging.h>
 
+#define PM_PWM_LUT_LOOP			0x01
+#define PM_PWM_LUT_RAMP_UP		0x02
+#define PM_PWM_LUT_REVERSE		0x04
+#define PM_PWM_LUT_PAUSE_HI_EN		0x08
+#define PM_PWM_LUT_PAUSE_LO_EN		0x10
+
+#define PM_PWM_LUT_NO_TABLE		0x20
+#define PM_PWM_LUT_USE_RAW_VALUE	0x40
+
+#define BREATH_LED_BRIGHTNESS_NOTIFICATION	"0,5,10,15,20,26,31,36,41,46,51,56,61,66,71,77,82,87,92,97,102,107,112,117,122,128,133,138,143,148,153,158,163,168,173,179,184,189,194,199,204,209,214,219,224,230,235,240,245,250,255"
+#define BREATH_LED_BRIGHTNESS_BUTTONS		"0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60"
+#define BREATH_LED_BRIGHTNESS_BATTERY		"0,50"
+#define BREATH_LED_BRIGHTNESS_CHARGING		"20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60"
+
+#define BREATH_SOURCE_NOTIFICATION	0x01
+#define BREATH_SOURCE_BATTERY		0x02
+#define BREATH_SOURCE_BUTTONS		0x04
+#define BREATH_SOURCE_ATTENTION		0x08
+#define BREATH_SOURCE_NONE		0xFF
+
+static int active_states = 0;
+
+static int last_state = BREATH_SOURCE_NONE;
+
+static int initialized = 0;
+
 namespace {
 using android::hardware::light::V2_0::LightState;
 
@@ -59,14 +85,18 @@ namespace V2_0 {
 namespace implementation {
 
 Light::Light(std::pair<std::ofstream, uint32_t>&& lcd_backlight,
-             std::vector<std::ofstream>&& button_backlight,
+             std::ofstream&& button_backlight,
              std::ofstream&& red_led,
              std::ofstream&& red_duty_pcts,
              std::ofstream&& red_start_idx,
              std::ofstream&& red_pause_lo,
              std::ofstream&& red_pause_hi,
              std::ofstream&& red_ramp_step_ms,
-             std::ofstream&& red_blink)
+             std::ofstream&& red_blink,
+             std::ofstream&& red_lut_flags,
+             std::ofstream&& red_outn,
+             std::ifstream&& battery_capacity,
+             std::ifstream&& battery_charging_status)
     : mLcdBacklight(std::move(lcd_backlight)),
       mButtonBacklight(std::move(button_backlight)),
       mRedLed(std::move(red_led)),
@@ -75,13 +105,17 @@ Light::Light(std::pair<std::ofstream, uint32_t>&& lcd_backlight,
       mRedPauseLo(std::move(red_pause_lo)),
       mRedPauseHi(std::move(red_pause_hi)),
       mRedRampStepMs(std::move(red_ramp_step_ms)),
-      mRedBlink(std::move(red_blink)) {
-    auto attnFn(std::bind(&Light::setAttentionLight, this, std::placeholders::_1));
+      mRedBlink(std::move(red_blink)),
+      mRedLutFlags(std::move(red_lut_flags)),
+      mRedOutn(std::move(red_outn)),
+      mBatteryCapacity(std::move(battery_capacity)),
+      mBatteryChargingStatus(std::move(battery_charging_status)) {
+    //auto attnFn(std::bind(&Light::setAttentionLight, this, std::placeholders::_1));
     auto backlightFn(std::bind(&Light::setLcdBacklight, this, std::placeholders::_1));
     auto batteryFn(std::bind(&Light::setBatteryLight, this, std::placeholders::_1));
     auto buttonsFn(std::bind(&Light::setButtonsBacklight, this, std::placeholders::_1));
     auto notifFn(std::bind(&Light::setNotificationLight, this, std::placeholders::_1));
-    mLights.emplace(std::make_pair(Type::ATTENTION, attnFn));
+    //mLights.emplace(std::make_pair(Type::ATTENTION, attnFn));
     mLights.emplace(std::make_pair(Type::BACKLIGHT, backlightFn));
     mLights.emplace(std::make_pair(Type::BATTERY, batteryFn));
     mLights.emplace(std::make_pair(Type::BUTTONS, buttonsFn));
@@ -113,12 +147,6 @@ Return<void> Light::getSupportedTypes(getSupportedTypes_cb _hidl_cb) {
     return Void();
 }
 
-void Light::setAttentionLight(const LightState& state) {
-    std::lock_guard<std::mutex> lock(mLock);
-    mAttentionState = state;
-    setSpeakerBatteryLightLocked();
-}
-
 void Light::setLcdBacklight(const LightState& state) {
     std::lock_guard<std::mutex> lock(mLock);
 
@@ -137,12 +165,10 @@ void Light::setLcdBacklight(const LightState& state) {
 
 void Light::setButtonsBacklight(const LightState& state) {
     std::lock_guard<std::mutex> lock(mLock);
-
-    uint32_t brightness = rgbToBrightness(state);
-
-    for (auto& button : mButtonBacklight) {
-        button << brightness << std::endl;
-    }
+    int brightness = rgbToBrightness(state);
+    mButtonState = state;
+    mButtonBacklight << (int)(brightness ? 6 : 2) << std::endl;
+    setSpeakerBatteryLightLocked();
 }
 
 void Light::setBatteryLight(const LightState& state) {
@@ -159,11 +185,11 @@ void Light::setNotificationLight(const LightState& state) {
 
 void Light::setSpeakerBatteryLightLocked() {
     if (isLit(mNotificationState)) {
-        setSpeakerLightLocked(mNotificationState);
-    } else if (isLit(mAttentionState)) {
-        setSpeakerLightLocked(mAttentionState);
+        setSpeakerLightLocked(BREATH_SOURCE_NOTIFICATION, mNotificationState);
+    } else if (isLit(mButtonState)) {
+        setSpeakerLightLocked(BREATH_SOURCE_BUTTONS, mButtonState);
     } else if (isLit(mBatteryState)) {
-        setSpeakerLightLocked(mBatteryState);
+        setSpeakerLightLocked(BREATH_SOURCE_BATTERY, mBatteryState);
     } else {
         // Lights off
         mRedLed << 0 << std::endl;
@@ -171,20 +197,32 @@ void Light::setSpeakerBatteryLightLocked() {
     }
 }
 
-void Light::setSpeakerLightLocked(const LightState& state) {
-    int red, blink;
+void Light::setSpeakerLightLocked(int event_source, const LightState& state) {
+    int brightness, blink;
     int onMs, offMs, stepDuration, pauseHi;
     uint32_t alpha;
+    int is_charging = 0;
+    int capacity = 0;
+    char charging_buff[20];
+    int lut_flags = 0;
+    std::string light_template;
 
-    // Extract brightness from AARRGGBB
-    alpha = (state.color >> 24) & 0xff;
+    brightness = rgbToBrightness(state);
 
-    // Retrieve each of the RGB colors
-    red = (state.color >> 16) & 0xff;
+    if (brightness > 0) {
+        active_states |= event_source;
+    } else {
+        active_states &= ~event_source;
+        if (active_states == 0) {
+            LOG(VERBOSE) << "disabling buttons backlight" << std::endl;
+            mRedLutFlags << (int)PM_PWM_LUT_NO_TABLE << std::endl; // smoothly turn led off
+            last_state = BREATH_SOURCE_NONE;
+            return;
+        }
+    }
 
-    // Scale RGB colors if a brightness has been applied by the user
-    if (alpha != 0xff) {
-        red = (red * alpha) / 0xff;
+    if (last_state < event_source) {
+        return;
     }
 
     switch (state.flashMode) {
@@ -198,35 +236,81 @@ void Light::setSpeakerLightLocked(const LightState& state) {
             offMs = 0;
             break;
     }
-    blink = onMs > 0 && offMs > 0;
+    blink = (onMs > 0) && (offMs > 0);
 
-    // Disable all blinking to start
-    mRedBlink << 0 << std::endl;
-
-    if (blink) {
-        stepDuration = RAMP_STEP_DURATION;
-        pauseHi = onMs - (stepDuration * RAMP_SIZE * 2);
-
-        if (stepDuration * RAMP_SIZE * 2 > onMs) {
-            stepDuration = onMs / (RAMP_SIZE * 2);
-            pauseHi = 0;
+    if (active_states & BREATH_SOURCE_NOTIFICATION) {
+        //state = mNotificationState;
+        light_template = BREATH_LED_BRIGHTNESS_NOTIFICATION;
+        lut_flags = PM_PWM_LUT_RAMP_UP;
+        if (blink) {
+            lut_flags |= PM_PWM_LUT_LOOP|PM_PWM_LUT_REVERSE|PM_PWM_LUT_PAUSE_HI_EN|PM_PWM_LUT_PAUSE_LO_EN;
         }
+        last_state = BREATH_SOURCE_NOTIFICATION;
+    } else if (active_states & BREATH_SOURCE_BATTERY) {
+        // can't get battery info from state, getting it from sysfs
+        //state = mBatteryState;
 
-        // Red
-        mRedStartIdx << 0 << std::endl;
-        mRedDutyPcts << getScaledDutyPcts(red) << std::endl;
-        mRedPauseLo << offMs << std::endl;
-        mRedPauseHi << pauseHi << std::endl;
-        mRedRampStepMs << stepDuration << std::endl;
+        mBatteryChargingStatus >> charging_buff;
 
-        // Start the party
-        mRedBlink << 1 << std::endl;
+        if (strstr(charging_buff, "Discharging") != NULL)
+            is_charging = 0;
+        else
+            is_charging = 1;
+        
+        mBatteryCapacity >> charging_buff;
+
+        capacity = atoi(charging_buff);
+        if (is_charging == 0) {
+            // battery low
+            light_template = BREATH_LED_BRIGHTNESS_BATTERY;
+            lut_flags = PM_PWM_LUT_LOOP|PM_PWM_LUT_RAMP_UP|PM_PWM_LUT_REVERSE|PM_PWM_LUT_PAUSE_HI_EN|PM_PWM_LUT_PAUSE_LO_EN;
+            onMs = 300;
+            offMs = 1500;
+        } else {
+            if (capacity < 90) { // see batteryService.java:978
+                // battery chagring
+                light_template = BREATH_LED_BRIGHTNESS_CHARGING;
+                lut_flags = PM_PWM_LUT_LOOP|PM_PWM_LUT_RAMP_UP|PM_PWM_LUT_REVERSE|PM_PWM_LUT_PAUSE_HI_EN|PM_PWM_LUT_PAUSE_LO_EN;
+                onMs = 500;
+                offMs = 500;
+            } else {
+                // battery full
+                light_template = BREATH_LED_BRIGHTNESS_CHARGING;
+                lut_flags = PM_PWM_LUT_RAMP_UP;
+                onMs = 0;
+                offMs = 0;
+            }
+        }
+        last_state = BREATH_SOURCE_BATTERY;
+    } else if (active_states & BREATH_SOURCE_BUTTONS) {
+        if (last_state == BREATH_SOURCE_BUTTONS) {
+            return;
+        }
+        //state = mButtonState;
+        light_template = BREATH_LED_BRIGHTNESS_BUTTONS;
+        lut_flags = PM_PWM_LUT_RAMP_UP;
+        last_state = BREATH_SOURCE_BUTTONS;
     } else {
-        if (red == 0) {
-            mRedBlink << 0 << std::endl;
-        }
-        mRedLed << red << std::endl;
+        last_state = BREATH_SOURCE_NONE;
+        LOG(VERBOSE) << "Unknown state" << std::endl;
+        return;
     }
+
+    if (!initialized) {
+        initialized = 1;
+        mRedLutFlags << (int)8 << std::endl;
+        mButtonBacklight << (int)0 << std::endl;
+        mRedLed << (int)255 << std::endl;
+    }
+
+    mRedDutyPcts << light_template << std::endl;
+    mRedRampStepMs << (int)20 << std::endl;
+    if (offMs > 0)
+        mRedPauseLo << offMs << std::endl;
+    if (onMs > 0)
+        mRedPauseHi << onMs << std::endl;
+    mRedLutFlags << lut_flags << std::endl;
+
 }
 
 }  // namespace implementation
