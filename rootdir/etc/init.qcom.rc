@@ -330,8 +330,8 @@ on boot
     chmod 0664 /sys/devices/virtual/graphics/fb1/hdcp/tp
 
     # NFC local data and nfcee xml storage
-    mkdir /data/nfc 0770 nfc nfc
-    mkdir /data/nfc/param 0770 nfc nfc
+    mkdir /data/vendor/nfc 0770 nfc nfc
+    mkdir /data/vendor/nfc/param 0770 nfc nfc
 
     # Allow access for CCID command/response timeout configuration
     chown system system /sys/module/ccid_bridge/parameters/bulk_msg_timeout
@@ -470,6 +470,8 @@ on post-fs-data
 
 on property:sys.boot_completed=1
     setprop vendor.post_boot.parsed 1
+    # Disable boosting
+    write /proc/sys/kernel/sched_boost 0
     swapon_all /vendor/etc/fstab.qcom
     restart cameraserver
     start perfd
