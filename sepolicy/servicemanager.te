@@ -1,3 +1,4 @@
-allow servicemanager hal_power_default:dir { open read search };
-allow servicemanager hal_power_default:process getattr;
+allow servicemanager { hal_power_default atfwd }:dir { open read search };
+allow servicemanager { hal_power_default atfwd }:process getattr;
 allow servicemanager hal_power_default:file { open read };
+allow servicemanager atfwd:file { open read };

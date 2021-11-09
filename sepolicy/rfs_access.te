@@ -1,5 +1,5 @@
 allow rfs_access self:capability net_raw;
-
+allow rfs_access system_data_root_file:dir { setattr };
 # debugfs access
 userdebug_or_eng(`
   allow rfs_access debugfs_rmt:dir search;

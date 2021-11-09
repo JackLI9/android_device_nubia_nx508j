@@ -1,0 +1,1 @@
+allow qtelephony atfwd_service:service_manager { add };

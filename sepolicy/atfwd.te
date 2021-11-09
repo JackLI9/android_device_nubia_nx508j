@@ -1,0 +1,4 @@
+allow atfwd servicemanager:binder call;
+
+allow atfwd atfwd_service:service_manager find;
+qmux_socket(atfwd)

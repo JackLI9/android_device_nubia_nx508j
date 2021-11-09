@@ -1,4 +1,4 @@
 allow hal_light_default sysfs_leds:file { rw_file_perms };
 allow hal_light_default sysfs:file { open read getattr };
 allow hal_light_default sysfs_battery_supply:dir { search open read };
-allow hal_light_default sysfs_battery_supply:file { open read };
+allow hal_light_default sysfs_battery_supply:file { open read getattr };
