@@ -1,8 +1,11 @@
 
 # Camera
-#camera.disable_zsl_mode=1
-#persist.camera.HAL3.enabled=1
+persist.camera.cpp.duplication=false
+persist.camera.eis.enable=1
+persist.camera.is_type=4
 
+# OEM Unlocking
+ro.oem_unlock_supported=1
 
 # Memory optimizations
 ro.vendor.qti.sys.fw.bservice_enable=true
@@ -65,7 +68,7 @@ qcom.hw.aac.encoder=true
 #
 # system props for the cne module
 #
-persist.cne.feature=0
+persist.cne.feature=1
 
 #system props for the MM modules
 
@@ -221,18 +224,16 @@ ro.telephony.default_cdma_sub=0
 persist.sys.lattice=36&12
 
 #device name showed in Settings
-persist.sys.devicename=nubia Z9
+persist.sys.devicename=Nubia Z9
 #camera extern mode exif
 #persist.sys.exif.model=nubia smart phone
 #device name for camera picture
-ro.config.devicename=nubia Z9
-ro.debuggable=1
-ro.secure=0
-#ro.apex.updatable=false
-#ro.lmk.critical_upgrade=true
-#ro.lmk.downgrade_pressure=60
-#ro.lmk.kill_heaviest_task=false
-#ro.lmk.log_stats=true
-#ro.lmk.upgrade_pressure=40
-#ro.lmk.use_psi=false
+ro.config.devicename=Nubia Z9
+
+#SSR
+persist.sys.ssr.restart_level="ALL_ENABLE"
+persist.sys.ssr.enable_ramdumps=0
+
+#Nfc
+ro.hardware.nfc_nci=bcm2079x.default
 
