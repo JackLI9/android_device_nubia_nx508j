@@ -16,8 +16,25 @@ LOCAL_PATH:= $(call my-dir)
 
 include $(CLEAR_VARS)
 
-LOCAL_SRC_FILES := rild_socket.c
+LOCAL_SRC_FILES := \
+	Audioclient.cpp \
+	rild_socket.c
+
 LOCAL_MODULE := rild_socket
+LOCAL_MODULE_TAGS := optional
+LOCAL_VENDOR_MODULE := true
+LOCAL_SHARED_LIBRARIES := \
+	libaudioclient
+
+include $(BUILD_SHARED_LIBRARY)
+
+include $(CLEAR_VARS)
+
+LOCAL_SRC_FILES := \
+	dpm/strdup16to8.cpp \
+	dpm/strdup8to16.cpp
+
+LOCAL_MODULE := libshim_dpmframework
 LOCAL_MODULE_TAGS := optional
 LOCAL_VENDOR_MODULE := true
 
@@ -36,7 +53,7 @@ include $(BUILD_SHARED_LIBRARY)
 include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := \
-    gui/SensorManager.cpp \
+    gui/SensorManager.cpp
 
 LOCAL_C_INCLUDES := \
     $(LOCAL_PATH)/include \
