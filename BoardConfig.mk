@@ -59,8 +59,8 @@ BOARD_KERNEL_IMAGE_NAME := Image
 TARGET_KERNEL_ARCH := arm64
 TARGET_KERNEL_HEADER_ARCH := arm64
 BOARD_DTBTOOL_ARGS := -2
-#TARGET_KERNEL_SOURCE := kernel/nubia/msm8994
-TARGET_KERNEL_SOURCE := kernel/nubia/android_kernel_nubia_msm8994
+TARGET_KERNEL_SOURCE := kernel/nubia/msm8994
+#TARGET_KERNEL_SOURCE := kernel/nubia/android_kernel_nubia_msm8994
 TARGET_KERNEL_CONFIG := msm8994-NX508J_defconfig
 LZMA_RAMDISK_TARGETS := recovery,boot
 
@@ -116,8 +116,14 @@ TARGET_LMKD_STATS_LOG := true
 
 # Camera
 TARGET_PROCESS_SDK_VERSION_OVERRIDE := \
+    /system/bin/cameraserver=22 \
+    /system/bin/mediaserver=22 \
     /system/vendor/bin/mm-qcamera-daemon=22
-USE_DEVICE_SPECIFIC_CAMERA := true
+
+BOARD_QTI_CAMERA_32BIT_ONLY := true
+
+# ANT+
+BOARD_ANT_WIRELESS_DEVICE := "vfs-prerelease"
 
 # Properties
 TARGET_SYSTEM_PROP += $(DEVICE_PATH)/system.prop
@@ -188,7 +194,8 @@ USE_DEVICE_SPECIFIC_DATA_IPA_CFG_MGR := true
 TARGET_PROVIDES_KEYMASTER := true
 
 # Cpusets
-#ENABLE_SCHED_BOOST := true
+ENABLE_CPUSETS := true
+ENABLE_SCHED_BOOST := true
 
 # Lights
 TARGET_PROVIDES_LIBLIGHT := true
@@ -208,6 +215,11 @@ BOARD_FLASH_BLOCK_SIZE := 262144
 TARGET_USERIMAGES_USE_EXT4 := true
 TARGET_USERIMAGES_USE_F2FS := true
 TARGET_USES_MKE2FS := true
+
+#Peripheral manager is enabled on this target
+#This flag means that peripheral manager is enabled
+#is controlling the power on/off on certain peripherals.
+TARGET_PER_MGR_ENABLED := true
 
 # Power
 TARGET_TAP_TO_WAKE_NODE := "/data/tp/easy_wakeup_gesture"
@@ -250,6 +262,8 @@ BOARD_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy
 
 # Shims
 TARGET_LD_SHIM_LIBS := \
+    /system/vendor/bin/ATFWD-daemon|libshim_dpmframework.so \
+    /system/vendor/lib64/libcne.so|libshim_dpmframework.so \
     /system/lib/hw/camera.msm8994.so|libshim_camera.so \
     /system/vendor/lib/libmmcamera2_stats_modules.so|libshim_cald.so \
     /system/vendor/lib/libmmcamera2_sensor_modules.so|libshim_atomic.so \

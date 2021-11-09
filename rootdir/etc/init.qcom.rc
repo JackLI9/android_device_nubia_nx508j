@@ -37,6 +37,7 @@ on early-init
 
     # Setup zram options
     write /sys/block/zram0/comp_algorithm lz4
+    write /sys/block/zram0/max_comp_streams 4
 
     write /proc/sys/vm/page-cluster 0
     write /proc/sys/kernel/sched_boost 1
@@ -52,6 +53,15 @@ on init
     start program_bdaddr
     chmod 0644 /proc/cmdline
     mkdir /persist/data 0700 system system
+
+    # add a cpuset for the camera daemon
+    # we want all the little cores for camera
+    mkdir /dev/cpuset/camera-daemon
+    write /dev/cpuset/camera-daemon/cpus 0
+    write /dev/cpuset/camera-daemon/mems 0
+    chown system system /dev/cpuset/camera-daemon
+    chown system system /dev/cpuset/camera-daemon/tasks
+    chmod 0664 /dev/cpuset/camera-daemon/tasks
 
     # Slow Motion Scheduling Group
     mkdir /dev/cpuctl/smsg
@@ -117,15 +127,6 @@ on boot
     # permissions for NFC
     chmod 0660 /dev/bcm2079x
     chown nfc nfc /dev/bcm2079x
-    
-    # add a cpuset for the camera daemon
-    # we want all the little cores for camera
-    mkdir /dev/cpuset/camera-daemon
-    write /dev/cpuset/camera-daemon/cpus 0-3
-    write /dev/cpuset/camera-daemon/mems 0
-    chown system system /dev/cpuset/camera-daemon
-    chown system system /dev/cpuset/camera-daemon/tasks
-    chmod 0664 /dev/cpuset/camera-daemon/tasks
 
     # update foreground cpuset now that processors are up
     # reserve CPU 3 for the top app and camera daemon
@@ -133,7 +134,7 @@ on boot
     write /dev/cpuset/background/cpus 0
     write /dev/cpuset/system-background/cpus 0-2
     write /dev/cpuset/top-app/cpus 0-7
-    write /dev/cpuset/restricted/cpus 0-3
+    write /dev/cpuset/camera-daemon/cpus 0-3
 
     start rmt_storage
     start rfs_access
@@ -270,7 +271,7 @@ on boot
 
     # Assign TCP buffer thresholds to be ceiling value of technology maximums
     # Increased technology maximums should be reflected here.
-    write /proc/sys/net/core/rmem_max  16777216
+    write /proc/sys/net/core/rmem_max  8388608
     write /proc/sys/net/core/wmem_max  8388608
 
     # To prevent out of order acknowledgements from making
@@ -336,11 +337,6 @@ on boot
     # Allow access for CCID command/response timeout configuration
     chown system system /sys/module/ccid_bridge/parameters/bulk_msg_timeout
 
-    # Mark the copy complete flag to not completed
-    write /data/misc/radio/copy_complete 0
-    chown radio radio /data/misc/radio/copy_complete
-    chmod 0660 /data/misc/radio/copy_complete
-
     # Wifi firmware reload path
     chown wifi wifi /sys/module/wlan/parameters/fwpath
 
@@ -370,6 +366,9 @@ on post-fs-data
    	#end
 
     chown system audio /system/etc/KaraParameters
+
+    # Ecc_Handler qcril.db
+    mkdir /data/misc/radio 0770 system radio
 
 	#ZTEMT:jixd add for af infinity calibration -----begin	
 	mkdir /persist/camera 0755 system system
@@ -466,6 +465,22 @@ on post-fs-data
     setprop ro.min_freq_0 384000
     setprop ro.min_freq_4 384000
 
+    # Create the directories used by CnE subsystem
+    mkdir /data/connectivity 0771 system system
+    chown system system /data/connectivity
+
+    #Create directory from IMS services
+    mkdir /data/shared 0755
+    chown system system /data/shared
+
+    # File flags for prebuilt ril db file
+    write /data/misc/radio/prebuilt_db_support 1
+    chown radio radio /data/misc/radio/prebuilt_db_support
+    chmod 0400 /data/misc/radio/prebuilt_db_support
+    write /data/misc/radio/db_check_done 0
+    chown radio radio /data/misc/radio/db_check_done
+    chmod 0660 /data/misc/radio/db_check_done
+
     setprop vold.post_fs_data_done 1
 
 on property:sys.boot_completed=1
@@ -537,6 +552,26 @@ service adsprpcd /system/vendor/bin/adsprpcd
     user media
     group media
 
+service ssr_setup /vendor/bin/ssr_setup
+    oneshot
+    disabled
+
+service ss_ramdump /vendor/bin/subsystem_ramdump
+    class main
+    user system
+    group system
+    disabled
+
+on property:persist.sys.ssr.restart_level=*
+    start ssr_setup
+
+on property:persist.sys.ssr.enable_ramdumps=1
+    write /sys/module/subsystem_restart/parameters/enable_ramdumps 1
+    start ss_ramdump
+
+on property:persist.sys.ssr.enable_ramdumps=0
+    write /sys/module/subsystem_restart/parameters/enable_ramdumps 0
+
 #service usf_tester /system/vendor/bin/usf_tester
 #    user system
 #    group system inet
@@ -591,37 +626,37 @@ service adsprpcd /system/vendor/bin/adsprpcd
 #
 #on property:init.svc.bootanim=stopped
 #    start usf-post-boot
-#
-#service imsqmidaemon /system/vendor/bin/imsqmidaemon
-#    class main
-#    user system
-#    socket ims_qmid stream 0660 system radio
-#    group radio log diag
-#
-#service imsdatadaemon /system/vendor/bin/imsdatadaemon
-#    class main
-#    user system
-#    socket ims_datad stream 0660 system radio
-#    group system wifi radio inet log diag
-#    disabled
-#
-#on property:sys.ims.QMI_DAEMON_STATUS=1
-#    start imsdatadaemon
-#
-#service ims_rtp_daemon /system/vendor/bin/ims_rtp_daemon
-#   class main
-#   user system
-#   socket ims_rtpd stream 0660 system radio
-#   group radio diag inet log
-#   disabled
-#
-#on property:sys.ims.DATA_DAEMON_STATUS=1
-#    start ims_rtp_daemon
-#
+
+service imsqmidaemon /system/vendor/bin/imsqmidaemon
+    class main
+    user system
+    socket ims_qmid stream 0660 system radio
+    group radio log oem_2950
+
+service imsdatadaemon /system/vendor/bin/imsdatadaemon
+    class main
+    user system
+    socket ims_datad stream 0660 system radio
+    group system wifi radio inet log oem_2950
+    disabled
+
+on property:sys.ims.QMI_DAEMON_STATUS=1
+    start imsdatadaemon
+
+service ims_rtp_daemon /system/vendor/bin/ims_rtp_daemon
+   class main
+   user system
+   socket ims_rtpd stream 0660 system radio
+   group radio oem_2950 inet log
+   disabled
+
+on property:sys.ims.DATA_DAEMON_STATUS=1
+    start ims_rtp_daemon
+
 #service imscmservice /system/vendor/bin/imscmservice
 #   class main
 #   user system
-#   group radio diag log
+#   group radio oem_2950 log
 
 service energy-awareness /system/vendor/bin/energy-awareness
     class main
@@ -673,17 +708,22 @@ on property:bluetooth.startbtsnoop=true
 on property:bluetooth.startbtsnoop=false
     stop btsnoop
 
-service ppd /system/vendor/bin/mm-pp-daemon
-    class hal
-    user system
-    socket pps stream 0660 system system
-    group system graphics
+#service ppd /system/vendor/bin/mm-pp-daemon
+#    class hal
+#    user system
+#    socket pps stream 0660 system system
+#    group system graphics
 
 on property:vold.decrypt=trigger_restart_framework
     start config_bluetooth
 
 on property:persist.env.fastdorm.enabled=true
     setprop persist.radio.data_no_toggle 1
+
+service cnd /system/vendor/bin/cnd
+    class late_start
+    socket cnd stream 660 root inet
+    writepid /dev/cpuset/system-background/tasks
 
 service irsc_util /system/vendor/bin/irsc_util "/vendor/etc/sec_config"
     class main
@@ -775,7 +815,7 @@ service port-bridge /system/bin/port-bridge /dev/mhi_pipe_32 /dev/ttyGS0
 service qmuxd /system/vendor/bin/qmuxd
     class main
     user root
-    group radio audio bluetooth gps oem_2950
+    group radio audio bluetooth gps oem_2950 wakelock
     writepid /dev/cpuset/system-background/tasks
 
 service netmgrd /system/vendor/bin/netmgrd
@@ -784,7 +824,7 @@ service netmgrd /system/vendor/bin/netmgrd
     group root system wifi wakelock radio inet oem_2950
     writepid /dev/cpuset/system-background/tasks
 
-service ipacm /vendor/bin/ipacm
+service ipacm /system/vendor/bin/ipacm
     class main
     user radio
     group radio inet
@@ -794,7 +834,6 @@ service qti /system/vendor/bin/qti
     class main
     user radio
     group radio net_raw oem_2950 usb net_admin
-    disabled
     writepid /dev/cpuset/system-background/tasks
 
 service sensors /system/vendor/bin/sensors.qcom
@@ -816,7 +855,8 @@ on property:sys.sysctl.tcp_adv_win_scale=*
     write /proc/sys/net/ipv4/tcp_adv_win_scale ${sys.sysctl.tcp_adv_win_scale}
 
 service wpa_supplicant /vendor/bin/hw/wpa_supplicant \
-    -O/data/vendor/wifi/wpa/sockets -puse_p2p_group_interface=1 \
+    -O/data/vendor/wifi/wpa/sockets \
+    -puse_p2p_group_interface=1 \
     -g@android:wpa_wlan0
     # we will start as root and wpa_supplicant will switch to user wifi
     # after setting up the capabilities required for WEXT
@@ -852,7 +892,7 @@ on property:drmdiag.load=1
 on property:drmdiag.load=0
     stop drmdiag
 
-service qcom-sh /vendor/bin/init.qcom.sh
+service qcom-sh /system/vendor/bin/init.qcom.sh
     class late_start
     user root
     oneshot
@@ -862,7 +902,7 @@ service battery_monitor /system/bin/battery_monitor
     group system
     disabled
 
-service ril-daemon2 /vendor/bin/hw/rild -c 2
+service ril-daemon2 /system/vendor/bin/hw/rild -c 2
     class main
     user radio
     group radio cache inet misc audio log readproc wakelock
@@ -906,6 +946,12 @@ on property:sys.qbcharger.enable=true
 on property:sys.qbcharger.enable=false
     stop qbcharger
 
+on property:init.svc.media=restarting
+    restart qcamerasvr
+
+on property:init.svc.servicemanager=restarting
+    restart qcamerasvr
+
 service msm_irqbalance /system/vendor/bin/msm_irqbalance -f /system/vendor/etc/msm_irqbalance.conf
     socket msm_irqbalance seqpacket 660 root system
     class core
@@ -914,7 +960,7 @@ service msm_irqbalance /system/vendor/bin/msm_irqbalance -f /system/vendor/etc/m
     disabled
     writepid /dev/cpuset/system-background/tasks
 
-service program_bdaddr /vendor/bin/init.program_bdaddr.sh
+service program_bdaddr /system/vendor/bin/init.program_bdaddr.sh
     user bluetooth
     group bluetooth
     seclabel u:r:bluetooth_loader:s0

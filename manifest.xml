@@ -28,7 +28,7 @@
     </hal>
     <hal format="hidl">
         <name>android.hardware.camera.provider</name>
-        <transport arch="32+64">passthrough</transport>
+        <transport>hwbinder</transport>
         <version>2.4</version>
         <interface>
             <name>ICameraProvider</name>
@@ -134,6 +134,25 @@
         </interface>
     </hal>
     <hal format="hidl">
+        <name>vendor.qti.hardware.radio.qcrilhook</name>
+        <transport>hwbinder</transport>
+        <version>1.0</version>
+        <interface>
+            <name>IQtiOemHook</name>
+            <instance>oemhook0</instance>
+            <instance>oemhook1</instance>
+        </interface>
+    </hal>
+    <!--hal format="hidl">
+        <name>android.hardware.nfc</name>
+        <transport>hwbinder</transport>
+        <version>1.0</version>
+        <interface>
+            <name>INfc</name>
+            <instance>default</instance>
+        </interface>
+    </hal-->
+    <hal format="hidl">
         <name>android.hardware.power</name>
         <transport>hwbinder</transport>
         <version>1.2</version>
@@ -142,10 +161,19 @@
             <instance>default</instance>
         </interface>
     </hal>
-    <hal format="hidl">
+    <!--hal format="hidl">
+        <name>android.hardware.thermal</name>
+        <transport>hwbinder</transport>
+        <version>1.0</version>
+        <interface>
+            <name>IThermal</name>
+            <instance>default</instance>
+        </interface>
+    </hal-->
+    <!--hal format="hidl">
         <name>android.hardware.radio</name>
         <transport>hwbinder</transport>
-        <version>1.2</version>
+        <version>1.0</version>
         <interface>
             <name>IRadio</name>
             <instance>slot1</instance>
@@ -156,7 +184,7 @@
             <instance>slot1</instance>
             <instance>slot2</instance>
         </interface>
-    </hal>
+    </hal-->
     <hal format="hidl">
         <name>android.hardware.radio.deprecated</name>
         <transport>hwbinder</transport>
@@ -212,7 +240,7 @@
             <instance>default</instance>
         </interface>
     </hal>
-    <!--hal format="hidl">
+    <hal format="hidl">
         <name>android.hardware.vr</name>
         <transport>hwbinder</transport>
         <version>1.0</version>
@@ -220,7 +248,7 @@
             <name>IVr</name>
             <instance>default</instance>
         </interface>
-    </hal-->
+    </hal>
     <hal format="hidl">
         <name>vendor.lineage.livedisplay</name>
         <transport>hwbinder</transport>
@@ -247,7 +275,7 @@
             <instance>default</instance>
         </interface>
     </hal>
-    <hal format="hidl">
+    <!--hal format="hidl">
         <name>android.hardware.radio.config</name>
         <transport>hwbinder</transport>
         <version>1.0</version>
@@ -255,5 +283,5 @@
             <name>IRadioConfig</name>
             <instance>default</instance>
         </interface>
-    </hal>
+    </hal-->
 </manifest>

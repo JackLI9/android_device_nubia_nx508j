@@ -21,7 +21,8 @@ DEVICE_PATH := device/nubia/nx508j
 
 # Overlay
 DEVICE_PACKAGE_OVERLAYS += \
-    $(DEVICE_PATH)/overlay
+    $(DEVICE_PATH)/overlay \
+    $(DEVICE_PATH)/overlay-lineage
 
 PRODUCT_ENFORCE_RRO_TARGETS := \
     framework-res
@@ -36,6 +37,14 @@ PRODUCT_COPY_FILES += \
     frameworks/av/media/libstagefright/data/media_codecs_google_audio.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_audio.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_telephony.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_telephony.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_video.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_video.xml
+
+# ANT+
+PRODUCT_PACKAGES += \
+    AntHalService \
+    com.dsi.ant.antradio_library
+
+PRODUCT_COPY_FILES += \
+    external/ant-wireless/antradio-library/com.dsi.ant.antradio_library.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/permissions/com.dsi.ant.antradio_library.xml
 
 # Audio configuration file
 PRODUCT_COPY_FILES += \
@@ -167,15 +176,26 @@ PRODUCT_PACKAGES += \
 
 # Camera
 PRODUCT_PACKAGES += \
+    camera.device@1.0-impl \
     android.hardware.camera.provider@2.4-impl \
-    camera.device@3.2-impl \
+    android.hardware.camera.provider@2.4-service \
+    camera.msm8994 \
+    libcamera \
+    libmmcamera_interface \
+    libmmcamera_interface2 \
+    libmmjpeg_interface \
+    libqomx_core \
+    mm-qcamera-app
 
 PRODUCT_PACKAGES += \
-    camera.msm8994 \
     libshim_atomic \
     libshim_camera \
     Snap
 
+    #camera.device@3.2-impl \
+    android.hardware.camera.provider@2.4-service \
+    android.hardware.camera.provider@2.4-impl-legacy \
+    android.hardware.camera.provider@2.4-impl \
 
 # Display
 PRODUCT_PACKAGES += \
@@ -197,15 +217,17 @@ PRODUCT_PACKAGES += \
     libtinyxml
 
 # NFC
-PRODUCT_PACKAGES += \
-    android.hardware.nfc@1.0-impl \
-    com.android.nfc_extras \
+#PRODUCT_PACKAGES += \
+    android.hardware.nfc@1.0-impl-bcm \
+    android.hardware.nfc@1.0-service \
     nfc_nci.bcm2079x.default \
-    libnfc-nci \
+    com.android.nfc_extras \
+    libnfc \
     NfcNci \
     Tag
 
-PRODUCT_COPY_FILES += \
+#PRODUCT_COPY_FILES += \
+    frameworks/native/data/etc/com.android.nfc_extras.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/com.android.nfc_extras.xml \
     frameworks/native/data/etc/android.hardware.nfc.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.nfc.xml \
     frameworks/native/data/etc/android.hardware.nfc.hce.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.nfc.hce.xml \
     frameworks/native/data/etc/android.hardware.nfc.hcef.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.nfc.hcef.xml \
@@ -226,10 +248,6 @@ PRODUCT_PACKAGES += \
     fs_config_files
 
 # Gatekeeper
-#PRODUCT_PACKAGES += \
-    android.hardware.gatekeeper@1.0-impl \
-    android.hardware.gatekeeper@1.0-service
-
 PRODUCT_PACKAGES += \
     android.hardware.gatekeeper@1.0-service.software
 
@@ -273,16 +291,11 @@ PRODUCT_PACKAGES += \
     init.recovery.qcom.rc \
     tp_node.sh \
     atmel_ts.sh \
-    init.project.rc \
     init.nx508j.power.sh \
-    init.environ.rc \
     usf_post_boot.sh \
     usf_settings.sh \
     init.qcom.power.rc
 
-# IMS
-PRODUCT_PACKAGES += \
-    ims-ext-common
 
 # IPv6
 PRODUCT_PACKAGES += \
@@ -297,7 +310,6 @@ PRODUCT_PACKAGES += \
 # Lights
 PRODUCT_PACKAGES += \
     android.hardware.light@2.0-service.nx508j
-    #lights.msm8994
 
 # LiveDisplay
 PRODUCT_PACKAGES += \
@@ -328,6 +340,12 @@ PRODUCT_PACKAGES += \
     android.hardware.power-service-qti \
     android.hardware.power.stats@1.0-service.mock
 
+# Thermal HAL
+PRODUCT_PACKAGES += \
+    thermal.nx508j \
+    android.hardware.thermal@2.0-service.mock \
+    android.hardware.thermal@1.0-impl
+
 # Privapp Whitelist
 PRODUCT_COPY_FILES += \
     $(DEVICE_PATH)/configs/privapp-permissions-qti.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/permissions/privapp-permissions-qti.xml
@@ -338,14 +356,12 @@ PRODUCT_PACKAGES += \
 
 # RIL
 PRODUCT_PACKAGES += \
-    android.hardware.radio@1.2-radio-service \
-    android.hardware.radio.config@1.0-service \
     libcnefeatureconfig \
-    libprotobuf-cpp-full \
     librmnetctl \
     libxml2 \
     libshim_cald \
     services-ext \
+    libshim_dpmframework \
     rild_socket
 
 # Sensors
@@ -363,11 +379,17 @@ PRODUCT_PACKAGES += \
     TimeKeep
 
 # Telephony
-#PRODUCT_PACKAGES += \
-#    telephony-ext
+PRODUCT_PACKAGES += \
+    telephony-ext \
+    ims-ext-common \
+    ims_ext_common.xml \
+    qti-telephony-hidl-wrapper \
+    qti_telephony_hidl_wrapper.xml \
+    qti-telephony-utils \
+    qti_telephony_utils.xml \
 
-#PRODUCT_BOOT_JARS += \
-#    telephony-ext
+PRODUCT_BOOT_JARS += \
+    telephony-ext
 
 # Trust HAL
 PRODUCT_PACKAGES += \
@@ -379,7 +401,7 @@ PRODUCT_PACKAGES += \
     com.android.future.usb.accessory
 
 # VR
-#PRODUCT_PACKAGES += \
+PRODUCT_PACKAGES += \
     android.hardware.vr@1.0-impl \
     android.hardware.vr@1.0-service \
     vr.msm8994
@@ -393,6 +415,7 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     android.hardware.wifi@1.0-service \
     ipacm \
+    ipacm-diag \
     IPACM_cfg.xml \
     hostapd \
     libwpa_client \
@@ -404,5 +427,3 @@ PRODUCT_COPY_FILES += \
     $(DEVICE_PATH)/wifi/wpa_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/wpa_supplicant_overlay.conf \
     $(DEVICE_PATH)/wifi/WCNSS_cfg.dat:$(TARGET_COPY_OUT_SYSTEM)/etc/wifi/WCNSS_cfg.dat \
     $(DEVICE_PATH)/wifi/WCNSS_qcom_cfg.ini:$(TARGET_COPY_OUT_SYSTEM)/etc/wifi/WCNSS_qcom_cfg.ini
-    #$(DEVICE_PATH)/wifi/WCNSS_qcom_wlan_nv.bin:system/etc/wifi/WCNSS_qcom_wlan_nv.bin
-
