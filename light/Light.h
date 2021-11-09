@@ -41,9 +41,7 @@ struct Light : public ILight {
           std::ofstream&& red_ramp_step_ms,
           std::ofstream&& red_blink,
           std::ofstream&& red_lut_flags,
-          std::ofstream&& red_outn,
-          std::ifstream&& battery_capacity,
-          std::ifstream&& battery_charging_status);
+          std::ofstream&& red_outn);
 
     // Methods from ::android::hardware::light::V2_0::ILight follow.
     Return<Status> setLight(Type type, const LightState& state) override;
@@ -68,8 +66,6 @@ struct Light : public ILight {
     std::ofstream mRedBlink;
     std::ofstream mRedLutFlags;
     std::ofstream mRedOutn;
-    std::ifstream mBatteryCapacity;
-    std::ifstream mBatteryChargingStatus;
 
     LightState mButtonState;
     LightState mBatteryState;

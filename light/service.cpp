@@ -42,8 +42,6 @@ const static std::string kRedRampStepMsPath = "/sys/class/leds/nubia_led/ramp_st
 const static std::string kRedBlinkPath = "/sys/class/leds/nubia_led/blink_mode";
 const static std::string kRedLutFlagsPath = "/sys/class/leds/nubia_led/lut_flags";
 const static std::string kRedOutnPath = "/sys/class/leds/nubia_led/outn";
-const static std::string kBatteryCapacityPath = "/sys/class/power_supply/battery/capacity";
-const static std::string kBatteryChargingStatusPath = "/sys/class/power_supply/battery/status";
 
 int main() {
     uint32_t lcdMaxBrightness = 255;
@@ -133,20 +131,6 @@ int main() {
         return -errno;
     }
 
-    std::ifstream batteryCapacity(kBatteryCapacityPath);
-    if (!batteryCapacity) {
-        LOG(ERROR) << "Failed to open " << kBatteryCapacityPath << ", error=" << errno
-                   << " (" << strerror(errno) << ")";
-        return -errno;
-    }
-
-    std::ifstream batteryChargingStatus(kBatteryChargingStatusPath);
-    if (!batteryChargingStatus) {
-        LOG(ERROR) << "Failed to open " << kBatteryChargingStatusPath << ", error=" << errno
-                   << " (" << strerror(errno) << ")";
-        return -errno;
-    }
-
     android::sp<ILight> service = new Light(
             {std::move(lcdBacklight), lcdMaxBrightness}, 
             std::move(buttonBacklight),
@@ -158,9 +142,7 @@ int main() {
             std::move(redRampStepMs),
             std::move(redBlink),
             std::move(redLutFlags),
-            std::move(redOutn),
-            std::move(batteryCapacity),
-            std::move(batteryChargingStatus));
+            std::move(redOutn));
 
     configureRpcThreadpool(1, true);
 
