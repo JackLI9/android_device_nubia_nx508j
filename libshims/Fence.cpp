@@ -26,3 +26,4 @@ extern "C" int _ZN7android5Fence4waitEj(unsigned int timeout)
 
 extern "C" void _ZN8SkBitmap9setConfigENS_6ConfigEiij11SkAlphaType() {}
 extern "C" void _ZN8SkBitmap9setConfigENS_6ConfigEiim11SkAlphaType() {}
+extern "C" void _ZN7android5FenceD1Ev() {}
