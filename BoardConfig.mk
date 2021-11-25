@@ -60,7 +60,6 @@ TARGET_KERNEL_ARCH := arm64
 TARGET_KERNEL_HEADER_ARCH := arm64
 BOARD_DTBTOOL_ARGS := -2
 TARGET_KERNEL_SOURCE := kernel/nubia/msm8994
-#TARGET_KERNEL_SOURCE := kernel/nubia/android_kernel_nubia_msm8994
 TARGET_KERNEL_CONFIG := msm8994-NX508J_defconfig
 LZMA_RAMDISK_TARGETS := recovery,boot
 
@@ -111,16 +110,11 @@ QCOM_BT_USE_BTNV := true
 BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(DEVICE_PATH)/bluetooth
 BOARD_BLUETOOTH_BDROID_HCILP_INCLUDED := false
 
-# LMKD stats logging
-TARGET_LMKD_STATS_LOG := true
-
 # Camera
 TARGET_PROCESS_SDK_VERSION_OVERRIDE := \
     /system/bin/cameraserver=22 \
     /system/bin/mediaserver=22 \
     /system/vendor/bin/mm-qcamera-daemon=22
-
-BOARD_QTI_CAMERA_32BIT_ONLY := true
 
 # ANT+
 BOARD_ANT_WIRELESS_DEVICE := "vfs-prerelease"
@@ -200,9 +194,6 @@ ENABLE_SCHED_BOOST := true
 # Lights
 TARGET_PROVIDES_LIBLIGHT := true
 
-# Media
-TARGET_USES_MEDIA_EXTENSIONS := true
-
 # Partitions
 BOARD_BOOTIMAGE_PARTITION_SIZE := 67108864
 BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE := f2fs
@@ -253,16 +244,12 @@ ifeq ($(RECOVERY_VARIANT),twrp)
   TW_SCREEN_BLANK_ON_BOOT := true
 endif
 
-# Added to indicate that protobuf-c is supported in this build
-#PROTOBUF_SUPPORTED := true
-
 # SELinux
 include device/qcom/sepolicy-legacy/sepolicy.mk
 BOARD_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy
 
 # Shims
 TARGET_LD_SHIM_LIBS := \
-    /system/vendor/bin/ATFWD-daemon|libshim_dpmframework.so \
     /system/vendor/lib64/libcne.so|libshim_dpmframework.so \
     /system/lib/hw/camera.msm8994.so|libshim_camera.so \
     /system/vendor/lib/libmmcamera2_stats_modules.so|libshim_cald.so \
