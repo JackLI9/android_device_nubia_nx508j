@@ -473,14 +473,6 @@ on post-fs-data
     mkdir /data/shared 0755
     chown system system /data/shared
 
-    # File flags for prebuilt ril db file
-    write /data/misc/radio/prebuilt_db_support 1
-    chown radio radio /data/misc/radio/prebuilt_db_support
-    chmod 0400 /data/misc/radio/prebuilt_db_support
-    write /data/misc/radio/db_check_done 0
-    chown radio radio /data/misc/radio/db_check_done
-    chmod 0660 /data/misc/radio/db_check_done
-
     setprop vold.post_fs_data_done 1
 
 on property:sys.boot_completed=1
