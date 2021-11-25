@@ -1,9 +1,4 @@
 
-# Camera
-persist.camera.cpp.duplication=false
-persist.camera.eis.enable=1
-persist.camera.is_type=4
-
 # OEM Unlocking
 ro.oem_unlock_supported=1
 
@@ -18,7 +13,7 @@ ro.core_ctl_min_cpu=0
 ro.core_ctl_max_cpu=4
 
 # RIL
-rild.libpath=/vendor/lib64/libril-qc-qmi-1.so
+rild.libpath=/vendor/lib64/libril-wrapper.so
 rild.libargs=-d /dev/smd0
 persist.rild.nitz_plmn=
 persist.rild.nitz_long_ons_0=
@@ -36,10 +31,15 @@ persist.radio.add_power_save=0
 persist.radio.multisim.config=dsds
 persist.radio.apm_sim_not_pwdn=1
 persist.radio.sib16_support=1
+persist.radio.custom_ecc=1
 persist.radio.sw_mbn_update=0
 persist.radio.start_ota_daemon=1
 persist.radio.rat_on=combine
 persist.data.qmi.adb_logmask=0
+ro.telephony.default_network=10
+ro.data.large_tcp_window_size=true
+ro.ril.telephony.mqanelements=5
+ro.telephony.call_ring.multiple=false
 
 debug.sf.hw=1
 debug.egl.hw=1
@@ -119,7 +119,7 @@ persist.timed.enable=true
 #
 # 196608 is decimal for 0x30000 to report major/minor versions as 3/0
 # 196609 is decimal for 0x30001 to report major/minor versions as 3/1
-ro.opengles.version=196609
+ro.opengles.version=196610
 
 # System property for cabl
 ro.qualcomm.cabl=0
@@ -128,10 +128,6 @@ ro.qualcomm.cabl=0
 # System props for bluetooth
 # System prop to turn on hfp client
 bluetooth.hfp.client=1
-
-#Simulate sdcard on /data/media
-#
-persist.fuse_sdcard=true
 
 # Bluetooth
 bluetooth.enable_timeout_ms=12000
@@ -232,8 +228,11 @@ ro.config.devicename=Nubia Z9
 
 #SSR
 persist.sys.ssr.restart_level="ALL_ENABLE"
-persist.sys.ssr.enable_ramdumps=0
+persist.sys.ssr.enable_ramdumps=1
 
 #Nfc
 ro.hardware.nfc_nci=bcm2079x.default
+
+# Vendor security patch level
+ro.lineage.build.vendor_security_patch=2017-10-01
 
