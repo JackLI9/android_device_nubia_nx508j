@@ -362,7 +362,7 @@ PRODUCT_PACKAGES += \
     libshim_cald \
     services-ext \
     libshim_dpmframework \
-    rild_socket
+    libril_shim
 
 # Sensors
 PRODUCT_PACKAGES += \

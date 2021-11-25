@@ -252,7 +252,7 @@ TARGET_LD_SHIM_LIBS := \
     /system/lib/hw/camera.msm8994.so|libshim_camera.so \
     /system/vendor/lib/libmmcamera2_stats_modules.so|libshim_cald.so \
     /system/vendor/lib/libmmcamera2_sensor_modules.so|libshim_atomic.so \
-    /system/vendor/lib64/libril-qc-qmi-1.so|rild_socket.so
+    /system/vendor/lib64/libril-qc-qmi-1.so|libril_shim.so
 
 # WiFi
 BOARD_HAS_QCOM_WLAN := true

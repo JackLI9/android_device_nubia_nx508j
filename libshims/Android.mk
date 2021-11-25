@@ -20,7 +20,7 @@ LOCAL_SRC_FILES := \
 	Audioclient.cpp \
 	rild_socket.c
 
-LOCAL_MODULE := rild_socket
+LOCAL_MODULE := libril_shim
 LOCAL_MODULE_TAGS := optional
 LOCAL_VENDOR_MODULE := true
 LOCAL_SHARED_LIBRARIES := \
