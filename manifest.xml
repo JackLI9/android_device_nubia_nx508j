@@ -134,16 +134,6 @@
         </interface>
     </hal>
     <hal format="hidl">
-        <name>vendor.qti.hardware.radio.qcrilhook</name>
-        <transport>hwbinder</transport>
-        <version>1.0</version>
-        <interface>
-            <name>IQtiOemHook</name>
-            <instance>oemhook0</instance>
-            <instance>oemhook1</instance>
-        </interface>
-    </hal>
-    <!--hal format="hidl">
         <name>android.hardware.nfc</name>
         <transport>hwbinder</transport>
         <version>1.0</version>
@@ -151,7 +141,7 @@
             <name>INfc</name>
             <instance>default</instance>
         </interface>
-    </hal-->
+    </hal>
     <hal format="hidl">
         <name>android.hardware.power</name>
         <transport>hwbinder</transport>

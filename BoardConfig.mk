@@ -278,5 +278,8 @@ ifeq ($(HOST_OS),linux)
   endif
 endif
 
+# RIL
+BOARD_PROVIDES_LIBRIL := true
+
 # inherit from the proprietary version
 include vendor/nubia/nx508j/BoardConfigVendor.mk
