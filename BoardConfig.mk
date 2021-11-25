@@ -112,9 +112,7 @@ BOARD_BLUETOOTH_BDROID_HCILP_INCLUDED := false
 
 # Camera
 TARGET_PROCESS_SDK_VERSION_OVERRIDE := \
-    /system/bin/cameraserver=22 \
-    /system/bin/mediaserver=22 \
-    /system/vendor/bin/mm-qcamera-daemon=22
+    /system/vendor/bin/mm-qcamera-daemon=25
 
 # ANT+
 BOARD_ANT_WIRELESS_DEVICE := "vfs-prerelease"
