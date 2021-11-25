@@ -491,33 +491,33 @@ on property:sys.boot_completed=1
 
 # start services from here
 #start camera server as daemon
-service qcamerasvr /system/vendor/bin/mm-qcamera-daemon
-    class late_start
+service qcamerasvr /vendor/bin/mm-qcamera-daemon
+    class main
     user camera
     group camera system inet input graphics
     writepid /dev/cpuset/camera-daemon/tasks
 
-service qseecomd /system/vendor/bin/qseecomd
+service qseecomd /vendor/bin/qseecomd
     class core
     user root
     group root
     writepid /dev/cpuset/foreground/tasks
 
-service perfd /system/vendor/bin/perfd
+service perfd /vendor/bin/perfd
     class main
     user root
     group root system readproc
     disabled
     writepid /dev/cpuset/system-background/tasks
 
-service per_mgr /system/vendor/bin/pm-service
+service per_mgr /vendor/bin/pm-service
     class late_start
     user system
     group system
     ioprio rt 4
     writepid /dev/cpuset/system-background/tasks
 
-service per_proxy /system/vendor/bin/pm-proxy
+service per_proxy /vendor/bin/pm-proxy
     class late_start
     user system
     group system net_raw
@@ -530,7 +530,7 @@ on property:init.svc.per_mgr=running
 on property:sys.shutdown.requested=*
     stop per_proxy
 
-service thermal-engine /system/vendor/bin/thermal-engine
+service thermal-engine /vendor/bin/thermal-engine
     class main
     user root
     socket thermal-send-client stream 0666 system system
@@ -539,7 +539,13 @@ service thermal-engine /system/vendor/bin/thermal-engine
     group root
     writepid /dev/cpuset/system-background/tasks
 
-service adsprpcd /system/vendor/bin/adsprpcd
+service imsrcsservice /vendor/bin/imsrcsd
+   class main
+   user system
+   group radio diag inet log
+   writepid /dev/cpuset/system-background/tasks
+
+service adsprpcd /vendor/bin/adsprpcd
     class main
     user media
     group media
@@ -564,48 +570,48 @@ on property:persist.sys.ssr.enable_ramdumps=1
 on property:persist.sys.ssr.enable_ramdumps=0
     write /sys/module/subsystem_restart/parameters/enable_ramdumps 0
 
-#service usf_tester /system/vendor/bin/usf_tester
+#service usf_tester /vendor/bin/usf_tester
 #    user system
 #    group system inet
 #    disabled
 #
-#service usf_epos /system/vendor/bin/usf_epos
+#service usf_epos /vendor/bin/usf_epos
 #    class main
 #    user system
 #    group system inet
 #    disabled
 #
-#service usf_gesture /system/vendor/bin/usf_gesture
+#service usf_gesture /vendor/bin/usf_gesture
 #    user system
 #    group system inet
 #    disabled
 #
-#service usf_sync_gesture /system/vendor/bin/usf_sync_gesture
+#service usf_sync_gesture /vendor/bin/usf_sync_gesture
 #    user system
 #    group system inet audio
 #    disabled
 #
-#service usf_p2p /system/vendor/bin/usf_p2p
+#service usf_p2p /vendor/bin/usf_p2p
 #    user system
 #    group system inet
 #    disabled
 #
-#service usf_hovering /system/vendor/bin/usf_hovering
+#service usf_hovering /vendor/bin/usf_hovering
 #    user system
 #    group system inet
 #    disabled
 #
-#service usf_proximity /system/vendor/bin/usf_proximity
+#service usf_proximity /vendor/bin/usf_proximity
 #    user system
 #    group system inet
 #    disabled
 #
-#service usf_pairing /system/vendor/bin/usf_pairing
+#service usf_pairing /vendor/bin/usf_pairing
 #    user system
 #    group system inet
 #    disabled
 #
-#service usf_sw_calib /system/vendor/bin/usf_sw_calib
+#service usf_sw_calib /vendor/bin/usf_sw_calib
 #    user system
 #    group system inet
 #    disabled
@@ -619,50 +625,46 @@ on property:persist.sys.ssr.enable_ramdumps=0
 #on property:init.svc.bootanim=stopped
 #    start usf-post-boot
 
-service imsqmidaemon /system/vendor/bin/imsqmidaemon
-    class main
-    user system
-    socket ims_qmid stream 0660 system radio
-    group radio log oem_2950
-
-service imsdatadaemon /system/vendor/bin/imsdatadaemon
-    class main
-    user system
-    socket ims_datad stream 0660 system radio
-    group system wifi radio inet log oem_2950
-    disabled
-
-on property:sys.ims.QMI_DAEMON_STATUS=1
-    start imsdatadaemon
-
-service ims_rtp_daemon /system/vendor/bin/ims_rtp_daemon
-   class main
-   user system
-   socket ims_rtpd stream 0660 system radio
-   group radio oem_2950 inet log
-   disabled
-
-on property:sys.ims.DATA_DAEMON_STATUS=1
-    start ims_rtp_daemon
-
-#service imscmservice /system/vendor/bin/imscmservice
+#service imsqmidaemon /vendor/bin/imsqmidaemon
+#    class main
+#    user system
+#    socket ims_qmid stream 0660 system radio
+#    group radio log oem_2950
+#
+#service imsdatadaemon /vendor/bin/imsdatadaemon
+#    class main
+#    user system
+#    socket ims_datad stream 0660 system radio
+#    group system wifi radio inet log oem_2950
+#    disabled
+#
+#on property:sys.ims.QMI_DAEMON_STATUS=1
+#    start imsdatadaemon
+#
+#service ims_rtp_daemon /vendor/bin/ims_rtp_daemon
 #   class main
 #   user system
-#   group radio oem_2950 log
+#   socket ims_rtpd stream 0660 system radio
+#   group radio oem_2950 inet log
+#   disabled
+#
+#on property:sys.ims.DATA_DAEMON_STATUS=1
+#    start ims_rtp_daemon
 
-service energy-awareness /system/vendor/bin/energy-awareness
+
+service energy-awareness /vendor/bin/energy-awareness
     class main
     user root
     group system
     oneshot
 
-service tp_node /system/vendor/bin/tp_node.sh
+service tp_node /vendor/bin/tp_node.sh
     class late_start
     user root
     group root
     oneshot
 
-service atmel_ts /system/vendor/bin/atmel_ts.sh
+service atmel_ts /vendor/bin/atmel_ts.sh
     class late_start
     user root
     group root
@@ -700,11 +702,12 @@ on property:bluetooth.startbtsnoop=true
 on property:bluetooth.startbtsnoop=false
     stop btsnoop
 
-#service ppd /system/vendor/bin/mm-pp-daemon
-#    class hal
-#    user system
-#    socket pps stream 0660 system system
-#    group system graphics
+service ppd /vendor/bin/mm-pp-daemon
+    class hal
+    user system
+    socket pps stream 0660 system system
+    group system graphics
+    writepid /dev/cpuset/system-background/tasks
 
 on property:vold.decrypt=trigger_restart_framework
     start config_bluetooth
@@ -712,17 +715,17 @@ on property:vold.decrypt=trigger_restart_framework
 on property:persist.env.fastdorm.enabled=true
     setprop persist.radio.data_no_toggle 1
 
-service cnd /system/vendor/bin/cnd
+service cnd /vendor/bin/cnd
     class late_start
     socket cnd stream 660 root inet
     writepid /dev/cpuset/system-background/tasks
 
-service irsc_util /system/vendor/bin/irsc_util "/vendor/etc/sec_config"
+service irsc_util /vendor/bin/irsc_util "/vendor/etc/sec_config"
     class main
     user root
     oneshot
 
-service rmt_storage /system/vendor/bin/rmt_storage
+service rmt_storage /vendor/bin/rmt_storage
     class core
     user root
     group root system wakelock
@@ -730,7 +733,7 @@ service rmt_storage /system/vendor/bin/rmt_storage
     ioprio rt 0
     writepid /dev/cpuset/system-background/tasks
 
-service rfs_access /system/vendor/bin/rfs_access
+service rfs_access /vendor/bin/rfs_access
     class core
     user root
     group system net_raw
@@ -742,7 +745,7 @@ on property:vendor.wc_transport.start_hci=true
 on property:vendor.wc_transport.start_hci=false
     stop start_hci_filter
 
-service start_hci_filter /system/vendor/bin/wcnss_filter
+service start_hci_filter /vendor/bin/wcnss_filter
     class late_start
     user bluetooth
     group bluetooth oem_2950 system wakelock
@@ -804,31 +807,32 @@ service port-bridge /system/bin/port-bridge /dev/mhi_pipe_32 /dev/ttyGS0
     disabled
 
 # QMUX must be in multiple groups to support external process connections
-service qmuxd /system/vendor/bin/qmuxd
+service qmuxd /vendor/bin/qmuxd
     class main
     user root
     group radio audio bluetooth gps oem_2950 wakelock
     writepid /dev/cpuset/system-background/tasks
 
-service netmgrd /system/vendor/bin/netmgrd
+service netmgrd /vendor/bin/netmgrd
     class main
     user root
     group root system wifi wakelock radio inet oem_2950
     writepid /dev/cpuset/system-background/tasks
 
-service ipacm /system/vendor/bin/ipacm
+service ipacm /vendor/bin/ipacm
     class main
     user radio
     group radio inet
     writepid /dev/cpuset/system-background/tasks
 
-service qti /system/vendor/bin/qti
+service qti /vendor/bin/qti
     class main
     user radio
     group radio net_raw oem_2950 usb net_admin
+    disabled
     writepid /dev/cpuset/system-background/tasks
 
-service sensors /system/vendor/bin/sensors.qcom
+service sensors /vendor/bin/sensors.qcom
     class late_start
     user root
     group root system
@@ -868,7 +872,7 @@ service ftm_ffbm /system/bin/ftmdaemon
     disabled
     oneshot
 
-service cnss-daemon /system/vendor/bin/cnss-daemon -n -l
+service cnss-daemon /vendor/bin/cnss-daemon -n -l
     class late_start
     writepid /dev/cpuset/system-background/tasks
 
@@ -884,7 +888,7 @@ on property:drmdiag.load=1
 on property:drmdiag.load=0
     stop drmdiag
 
-service qcom-sh /system/vendor/bin/init.qcom.sh
+service qcom-sh /vendor/bin/init.qcom.sh
     class late_start
     user root
     oneshot
@@ -894,7 +898,7 @@ service battery_monitor /system/bin/battery_monitor
     group system
     disabled
 
-service ril-daemon2 /system/vendor/bin/hw/rild -c 2
+service ril-daemon2 /vendor/bin/hw/rild -c 2
     class main
     user radio
     group radio cache inet misc audio log readproc wakelock
@@ -906,7 +910,7 @@ service profiler_daemon /system/bin/profiler_daemon
     group root
     disabled
 
-service ssr_diag /system/bin/ssr_diag
+service ssr_diag /vendor/bin/ssr_diag
     class late_start
     user system
     group system
@@ -944,7 +948,7 @@ on property:init.svc.media=restarting
 on property:init.svc.servicemanager=restarting
     restart qcamerasvr
 
-service msm_irqbalance /system/vendor/bin/msm_irqbalance -f /system/vendor/etc/msm_irqbalance.conf
+service msm_irqbalance /vendor/bin/msm_irqbalance -f /vendor/etc/msm_irqbalance.conf
     socket msm_irqbalance seqpacket 660 root system
     class core
     user root
@@ -952,7 +956,7 @@ service msm_irqbalance /system/vendor/bin/msm_irqbalance -f /system/vendor/etc/m
     disabled
     writepid /dev/cpuset/system-background/tasks
 
-service program_bdaddr /system/vendor/bin/init.program_bdaddr.sh
+service program_bdaddr /vendor/bin/init.program_bdaddr.sh
     user bluetooth
     group bluetooth
     seclabel u:r:bluetooth_loader:s0
