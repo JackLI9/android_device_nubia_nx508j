@@ -176,26 +176,12 @@ PRODUCT_PACKAGES += \
 
 # Camera
 PRODUCT_PACKAGES += \
-    camera.device@1.0-impl \
-    android.hardware.camera.provider@2.4-impl \
-    android.hardware.camera.provider@2.4-service \
-    camera.msm8994 \
-    libcamera \
-    libmmcamera_interface \
-    libmmcamera_interface2 \
-    libmmjpeg_interface \
-    libqomx_core \
-    mm-qcamera-app
+    android.hardware.camera.provider@2.4-impl-legacy
 
 PRODUCT_PACKAGES += \
     libshim_atomic \
     libshim_camera \
     Snap
-
-    #camera.device@3.2-impl \
-    android.hardware.camera.provider@2.4-service \
-    android.hardware.camera.provider@2.4-impl-legacy \
-    android.hardware.camera.provider@2.4-impl \
 
 # Display
 PRODUCT_PACKAGES += \
