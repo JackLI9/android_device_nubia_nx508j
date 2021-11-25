@@ -7,6 +7,18 @@ value:2951
 [AID_VENDOR_RFS_SHARED]
 value:2952
 
+[vendor/bin/xtwifi-client]
+mode: 0755
+user:  AID_GPS
+group: AID_GPS
+caps: NET_BIND_SERVICE BLOCK_SUSPEND WAKE_ALARM
+
+[system/vendor/bin/xtwifi-client]
+mode: 0755
+user:  AID_GPS
+group: AID_GPS
+caps: NET_BIND_SERVICE BLOCK_SUSPEND WAKE_ALARM
+
 [system/vendor/bin/btnvtool]
 mode: 0755
 user: AID_BLUETOOTH
