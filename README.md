@@ -1,3 +1,11 @@
+=====================================   
+BUGs list:   
+  Audio: Voice Call   
+  Camera: Video recoder   
+  and so on...   
+
+=====================================   
+
 Copyright 2015 - The CyanogenMod Project
 
 Device configuration for ZTE Nubia Z9.
