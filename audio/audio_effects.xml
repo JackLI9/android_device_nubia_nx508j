@@ -12,7 +12,7 @@
         <library name="loudness_enhancer" path="libldnhncr.so"/>
         <library name="proxy" path="libeffectproxy.so"/>
         <library name="offload_bundle" path="libqcompostprocbundle.so"/>
-        <library name="audio_pre_processing" path="libqcomvoiceprocessing.so"/>
+        <library name="qcom_pre_processing" path="libqcomvoiceprocessing.so"/>
         <library name="ds_sw" path="libswdap.so"/>
         <library name="ds_hw" path="libhwdap.so"/>
     </libraries>
