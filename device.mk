@@ -19,6 +19,10 @@ $(call inherit-product, vendor/nubia/nx508j/nx508j-vendor.mk)
 
 DEVICE_PATH := device/nubia/nx508j
 
+# Soong namespaces
+PRODUCT_SOONG_NAMESPACES += \
+    $(DEVICE_PATH)
+
 # Overlay
 DEVICE_PACKAGE_OVERLAYS += \
     $(DEVICE_PATH)/overlay \
