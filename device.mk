@@ -163,8 +163,7 @@ PRODUCT_PACKAGES += \
     libaudio-resampler \
     libqcompostprocbundle \
     libqcomvisualizer \
-    libqcomvoiceprocessing \
-    libqcompostprocbundle
+    libqcomvoiceprocessing
 
 # Input Classifier HAL
 PRODUCT_PACKAGES += \
