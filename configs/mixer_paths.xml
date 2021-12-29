@@ -1399,6 +1399,11 @@
         <ctl name="SLIM RX1 MUX" value="SB1_PB" />
         <ctl name="SLIM RX2 MUX" value="SB1_PB" />
         <ctl name="SLIM_0_RX Channels" value="Two" />
+        <ctl name="DAC1 Source Selector" value="SBI1" />
+        <ctl name="DAC1 Lch Mixer Lch_Switch" value="1" />
+        <ctl name="DAC1 Rch Mixer Rch_Switch" value="1" />
+        <ctl name="HP Virt Switch" value="On" />
+        <ctl name="HP Out Volume" value="19" /> 
     </path>
 
    <path name="headphone-tail">
