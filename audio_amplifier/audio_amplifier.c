@@ -120,6 +120,8 @@ static int is_speaker(uint32_t snd_device) {
         case SND_DEVICE_OUT_SPEAKER_AND_ANC_HEADSET:
             speaker = 1;
             break;
+        default:
+            break;
     }
 
     return speaker;
