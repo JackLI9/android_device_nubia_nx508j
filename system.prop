@@ -164,7 +164,7 @@ persist.sys.wfd.zte_resolution=1
 persist.sys.wfd.zsink_support=1
 #property this is device support wfd 1080p output support(true)  not support(false)
 persist.sys.wfd.1080p_support=true
-vendor.tunnel.audio.encode = false
+vendor.tunnel.audio.encode=false
 #enable gapless by default
 vendor.audio.offload.gapless.enabled=true
 
