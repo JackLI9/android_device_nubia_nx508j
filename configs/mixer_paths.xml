@@ -31,7 +31,7 @@
 	<ctl name="DOut2 Rch Volume" value="25" />
 	<ctl name="DOut1 Volume Independent" value="0" />
 	<ctl name="DOut2 Volume Independent" value="0" />
-	<ctl name="HP Out Volume" value="19" />
+	<ctl name="HP Out Volume" value="12" />
 	<ctl name="HP Zero-Cross Timeout" value="1024/fs" />
 	<ctl name="Lineout1 Volume" value="5" />
 	<ctl name="Lineout2 Volume" value="5" />
@@ -1403,7 +1403,7 @@
         <ctl name="DAC1 Lch Mixer Lch_Switch" value="1" />
         <ctl name="DAC1 Rch Mixer Rch_Switch" value="1" />
         <ctl name="HP Virt Switch" value="On" />
-        <ctl name="HP Out Volume" value="19" /> 
+        <ctl name="HP Out Volume" value="12" /> 
     </path>
 
    <path name="headphone-tail">
@@ -1411,7 +1411,7 @@
         <ctl name="DAC1 Lch Mixer Lch_Switch" value="1" />
         <ctl name="DAC1 Rch Mixer Rch_Switch" value="1" />
         <ctl name="HP Virt Switch" value="On" />
-        <ctl name="HP Out Volume" value="19" /> 
+        <ctl name="HP Out Volume" value="12" /> 
 	</path>
 
     <path name="karaoke-mic">
@@ -1419,7 +1419,7 @@
         <ctl name="DAC1 Lch Mixer Lch_Switch" value="1" />
         <ctl name="DAC1 Rch Mixer Rch_Switch" value="1" />
         <ctl name="HP Virt Switch" value="On" />
-        <ctl name="HP Out Volume" value="19" />
+        <ctl name="HP Out Volume" value="12" />
     </path>
 
     <path name="karaoke-mic-light">
@@ -1631,7 +1631,7 @@
         <ctl name="DAC1 Lch Mixer Lch_Switch" value="1" />
         <ctl name="DAC1 Rch Mixer Lch_Switch" value="1" />
         <ctl name="HP Virt Switch" value="On" />
-        <ctl name="HP Out Volume" value="19" />
+        <ctl name="HP Out Volume" value="12" />
 	</path>
 
     <path name="voice-headphone-tail">
@@ -1639,7 +1639,7 @@
         <ctl name="DAC1 Lch Mixer Lch_Switch" value="1" />
         <ctl name="DAC1 Rch Mixer Lch_Switch" value="1" />
         <ctl name="HP Virt Switch" value="On" />
-        <ctl name="HP Out Volume" value="19" />
+        <ctl name="HP Out Volume" value="12" />
 	</path>
 
     <path name="voice-headset-mic">
