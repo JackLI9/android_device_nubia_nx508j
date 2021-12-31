@@ -211,7 +211,7 @@
     <bool name="config_unplugTurnsOnScreen">true</bool>
 
     <!-- reference volume index for music stream to limit headphone volume and display warning -->
-    <integer name="config_safe_media_volume_index">16</integer>
+    <integer name="config_safe_media_volume_index">13</integer>
 
     <!-- Flag indicating whether the we should enable the automatic brightness in Settings.
          Software implementation will be used if config_hardware_auto_brightness_available is not set -->
