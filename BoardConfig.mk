@@ -19,6 +19,8 @@
 # Product-specific compile-time definitions.
 #
 
+TARGET_OTA_ASSERT_DEVICE := NX508J,nx508j
+
 DEVICE_PATH := device/nubia/nx508j
 
 BOARD_VENDOR := nubia
