@@ -1537,7 +1537,8 @@
     </path>
 
     <path name="headset-mic">
-        <path name="adc2" />
+        <!--path name="adc2" /-->
+        <path name="headset-mic-karaoke-middle" />
     </path>
 
     <!-- USE DSP mode
