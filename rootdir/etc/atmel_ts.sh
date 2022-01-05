@@ -40,7 +40,7 @@ echo "2" > t19
 #0 : no backup
 #1 : backup
 #echo 0 > self_tune
-dmesg > /cache/atmel_ts.log
+#dmesg > /cache/atmel_ts.log
 
 sleep 1
 
