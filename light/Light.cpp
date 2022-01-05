@@ -94,12 +94,12 @@ Light::Light(std::pair<std::ofstream, uint32_t>&& lcd_backlight,
       mRedBlink(std::move(red_blink)),
       mRedLutFlags(std::move(red_lut_flags)),
       mRedOutn(std::move(red_outn)) {
-    //auto attnFn(std::bind(&Light::setAttentionLight, this, std::placeholders::_1));
+    auto attnFn(std::bind(&Light::setAttentionLight, this, std::placeholders::_1));
     auto backlightFn(std::bind(&Light::setLcdBacklight, this, std::placeholders::_1));
     auto batteryFn(std::bind(&Light::setBatteryLight, this, std::placeholders::_1));
     auto buttonsFn(std::bind(&Light::setButtonsBacklight, this, std::placeholders::_1));
     auto notifFn(std::bind(&Light::setNotificationLight, this, std::placeholders::_1));
-    //mLights.emplace(std::make_pair(Type::ATTENTION, attnFn));
+    mLights.emplace(std::make_pair(Type::ATTENTION, attnFn));
     mLights.emplace(std::make_pair(Type::BACKLIGHT, backlightFn));
     mLights.emplace(std::make_pair(Type::BATTERY, batteryFn));
     mLights.emplace(std::make_pair(Type::BUTTONS, buttonsFn));
@@ -181,6 +181,12 @@ void Light::setLcdBacklight(const LightState& state) {
     }
 }
 
+void Light::setAttentionLight(const LightState& state) {
+    std::lock_guard<std::mutex> lock(mLock);
+    mAttentionState = state;
+    setSpeakerBatteryLightLocked();
+}
+
 void Light::setButtonsBacklight(const LightState& state) {
     std::lock_guard<std::mutex> lock(mLock);
     int brightness = rgbToBrightness(state);
@@ -208,6 +214,8 @@ void Light::setSpeakerBatteryLightLocked() {
         setSpeakerLightLocked(BREATH_SOURCE_BUTTONS, mButtonState);
     } else if (isLit(mBatteryState)) {
         setSpeakerLightLocked(BREATH_SOURCE_BATTERY, mBatteryState);
+    } else if (isLit(mAttentionState)) {
+        setSpeakerLightLocked(BREATH_SOURCE_ATTENTION, mAttentionState);
     }
 }
 
@@ -259,6 +267,14 @@ void Light::setSpeakerLightLocked(int event_source, const LightState& state) {
             lut_flags |= PM_PWM_LUT_LOOP|PM_PWM_LUT_REVERSE|PM_PWM_LUT_PAUSE_HI_EN|PM_PWM_LUT_PAUSE_LO_EN;
         }
         last_state = BREATH_SOURCE_NOTIFICATION;
+    } else if (active_states & BREATH_SOURCE_ATTENTION) {
+        light_template = BREATH_LED_BRIGHTNESS_NOTIFICATION;
+        lut_flags = PM_PWM_LUT_RAMP_UP;
+        if (blink) {
+            RampStepMs = "20";
+            lut_flags |= PM_PWM_LUT_LOOP|PM_PWM_LUT_REVERSE|PM_PWM_LUT_PAUSE_HI_EN|PM_PWM_LUT_PAUSE_LO_EN;
+        }
+        last_state = BREATH_SOURCE_ATTENTION;
     } else if (active_states & BREATH_SOURCE_BATTERY) {
 
         if (!getChargeStatus()) {
