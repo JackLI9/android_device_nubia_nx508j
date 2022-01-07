@@ -98,10 +98,10 @@ static int getBatteryStatus(void)
     capacity = atoi(capacity_buff);
 
     if (strncmp(status_buff, "Charging", 8) == 0) {
-        if (capacity < 90) { // see batteryService.java:978
-            return BATTERY_CHARGING;
-        } else {
+        if (capacity == 100) { // see batteryService.java:978
             return BATTERY_FULL;
+        } else {
+            return BATTERY_CHARGING;
         }
     } else {
         if (capacity <= 15) {
