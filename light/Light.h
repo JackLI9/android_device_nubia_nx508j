@@ -24,6 +24,18 @@
 #include <mutex>
 #include <unordered_map>
 
+/**
+ * battery defs
+ */
+
+enum battery_status {
+    BATTERY_UNKNOWN = 0,
+    BATTERY_LOW,
+    BATTERY_FREE,
+    BATTERY_CHARGING,
+    BATTERY_FULL,
+};
+
 namespace android {
 namespace hardware {
 namespace light {
@@ -48,6 +60,7 @@ struct Light : public ILight {
     Return<void> getSupportedTypes(getSupportedTypes_cb _hidl_cb) override;
 
   private:
+    void setAttentionLight(const LightState& state);
     void setBatteryLight(const LightState& state);
     void setButtonsBacklight(const LightState& state);
     void setLcdBacklight(const LightState& state);
@@ -66,10 +79,6 @@ struct Light : public ILight {
     std::ofstream mRedBlink;
     std::ofstream mRedLutFlags;
     std::ofstream mRedOutn;
-
-    LightState mButtonState;
-    LightState mBatteryState;
-    LightState mNotificationState;
 
     std::unordered_map<Type, std::function<void(const LightState&)>> mLights;
     std::mutex mLock;

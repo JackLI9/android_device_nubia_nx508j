@@ -30,9 +30,10 @@
 #define PM_PWM_LUT_USE_RAW_VALUE	0x40
 
 #define BREATH_LED_BRIGHTNESS_NOTIFICATION	"0,5,10,15,20,26,31,36,41,46,51,56,61,66,71,77,82,87,92,97,102,107,112,117,122,128,133,138,143,148,153,158,163,168,173,179,184,189,194,199,204,209,214,219,224,230,235,240,245,250,255"
-#define BREATH_LED_BRIGHTNESS_BUTTONS		"0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60"
+//#define BREATH_LED_BRIGHTNESS_BUTTONS		"0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60"
 #define BREATH_LED_BRIGHTNESS_BATTERY		"0,50"
 #define BREATH_LED_BRIGHTNESS_CHARGING		"20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60"
+#define BREATH_LED_BRIGHTNESS_BUTTONS		"0,15,25,35,55"
 
 #define BREATH_SOURCE_NOTIFICATION	0x01
 #define BREATH_SOURCE_BATTERY		0x02
@@ -61,9 +62,55 @@ static uint32_t rgbToBrightness(const LightState& state) {
             (29 * (color & 0xff))) >> 8;
 }
 
-static bool isLit(const LightState& state) {
-    return (state.color & 0x00ffffff);
+static int readStr(std::string path, char *buffer, size_t size)
+{
+
+    std::ifstream file(path);
+
+    if (!file.is_open()) {
+        LOG(ERROR) << "Failed to read: " << path.c_str() << std::endl;
+        return -1;
+    }
+
+    file.read(buffer, size);
+    file.close();
+    return 1;
 }
+
+static int getBatteryStatus(void)
+{
+    int err, capacity;
+    char capacity_buff[6];
+    char status_buff[16];
+
+    err = readStr(BATTERY_CHARGING_STATUS, status_buff, sizeof(status_buff));
+    if (err < 0) {
+        LOG(ERROR) << "Failed to read battery status: " << err << std::endl;
+        return BATTERY_UNKNOWN;
+    }
+
+    err = readStr(BATTERY_CAPACITY, capacity_buff, sizeof(capacity_buff));
+    if (err < 0) {
+        LOG(ERROR) << "Failed to read battery capacity: " << err << std::endl;
+        return BATTERY_UNKNOWN;
+    }
+
+    capacity = atoi(capacity_buff);
+
+    if (strncmp(status_buff, "Charging", 8) == 0) {
+        if (capacity < 90) { // see batteryService.java:978
+            return BATTERY_CHARGING;
+        } else {
+            return BATTERY_FULL;
+        }
+    } else {
+        if (capacity <= 15) {
+            return BATTERY_LOW;
+        } else {
+            return BATTERY_FREE;
+        }
+    }
+}  // getBatteryStatus
 }  // anonymous namespace
 
 namespace android {
@@ -131,31 +178,6 @@ Return<void> Light::getSupportedTypes(getSupportedTypes_cb _hidl_cb) {
     return Void();
 }
 
-static void readStr(std::string path, char *buffer, size_t size) {
-
-    std::ifstream file(path);
-
-    if (!file.is_open()) {
-        LOG(ERROR) << "Failed to read: " << path.c_str() << std::endl;
-        return;
-    }
-
-    file.read(buffer, size);
-    file.close();
-}
-
-static int getChargeStatus(void) {
-    char charging_buff[20];
-
-    readStr(BATTERY_CHARGING_STATUS, charging_buff, sizeof(charging_buff));
-
-    if (strstr(charging_buff, "Discharging") != NULL)
-        return 0;
-    else
-        return 1;
-
-}
-
 void Light::setLcdBacklight(const LightState& state) {
     std::lock_guard<std::mutex> lock(mLock);
 
@@ -170,61 +192,34 @@ void Light::setLcdBacklight(const LightState& state) {
     }
 
     mLcdBacklight.first << brightness << std::endl;
-
-    if (brightness <= 0 && !getChargeStatus()) {
-        mRedDutyPcts << "0" << std::endl;
-        mRedRampStepMs << "0" << std::endl;
-        mRedLutFlags << PM_PWM_LUT_NO_TABLE << std::endl;
-    } else {
-        mRedDutyPcts << "65" << std::endl;
-        mRedLutFlags << PM_PWM_LUT_RAMP_UP << std::endl;
-    }
 }
 
 void Light::setAttentionLight(const LightState& state) {
     std::lock_guard<std::mutex> lock(mLock);
-    mAttentionState = state;
-    setSpeakerBatteryLightLocked();
+    setSpeakerLightLocked(BREATH_SOURCE_ATTENTION, state);
 }
 
 void Light::setButtonsBacklight(const LightState& state) {
     std::lock_guard<std::mutex> lock(mLock);
     int brightness = rgbToBrightness(state);
-    mButtonState = state;
+    setSpeakerLightLocked(BREATH_SOURCE_BUTTONS, state);
     mButtonBacklight << (int)(brightness ? 6 : 2) << std::endl;
-    setSpeakerBatteryLightLocked();
 }
 
 void Light::setBatteryLight(const LightState& state) {
     std::lock_guard<std::mutex> lock(mLock);
-    mBatteryState = state;
-    setSpeakerBatteryLightLocked();
+    setSpeakerLightLocked(BREATH_SOURCE_BATTERY, state);
 }
 
 void Light::setNotificationLight(const LightState& state) {
     std::lock_guard<std::mutex> lock(mLock);
-    mNotificationState = state;
-    setSpeakerBatteryLightLocked();
-}
-
-void Light::setSpeakerBatteryLightLocked() {
-    if (isLit(mNotificationState)) {
-        setSpeakerLightLocked(BREATH_SOURCE_NOTIFICATION, mNotificationState);
-    } else if (isLit(mButtonState)) {
-        setSpeakerLightLocked(BREATH_SOURCE_BUTTONS, mButtonState);
-    } else if (isLit(mBatteryState)) {
-        setSpeakerLightLocked(BREATH_SOURCE_BATTERY, mBatteryState);
-    } else if (isLit(mAttentionState)) {
-        setSpeakerLightLocked(BREATH_SOURCE_ATTENTION, mAttentionState);
-    }
+    setSpeakerLightLocked(BREATH_SOURCE_NOTIFICATION, state);
 }
 
 void Light::setSpeakerLightLocked(int event_source, const LightState& state) {
-    int brightness, blink;
-    int onMs, offMs;
-    int capacity = 0;
+    int brightness, blink, onMs, offMs;
     int lut_flags = 0;
-    char capacity_buff[20];
+    int battery_status = BATTERY_UNKNOWN;
     std::string light_template;
     std::string RampStepMs;
 
@@ -276,32 +271,28 @@ void Light::setSpeakerLightLocked(int event_source, const LightState& state) {
         }
         last_state = BREATH_SOURCE_ATTENTION;
     } else if (active_states & BREATH_SOURCE_BATTERY) {
-
-        if (!getChargeStatus()) {
+        battery_status = getBatteryStatus();
+        if (battery_status == BATTERY_LOW) {
             // battery low
+            RampStepMs = "50";
             light_template = BREATH_LED_BRIGHTNESS_BATTERY;
             lut_flags = PM_PWM_LUT_LOOP|PM_PWM_LUT_RAMP_UP|PM_PWM_LUT_REVERSE|PM_PWM_LUT_PAUSE_HI_EN|PM_PWM_LUT_PAUSE_LO_EN;
             onMs = 300;
             offMs = 1500;
-        } else {
-            //mBatteryCapacity >> capacity_buff;
-            readStr(BATTERY_CAPACITY, capacity_buff, sizeof(capacity_buff));
-            capacity = atoi(capacity_buff);
-            if (capacity < 100) { // see batteryService.java:978
-                // battery chagring
-                RampStepMs = "0";
-                light_template = BREATH_LED_BRIGHTNESS_CHARGING;
-                lut_flags = PM_PWM_LUT_LOOP|PM_PWM_LUT_RAMP_UP|PM_PWM_LUT_REVERSE|PM_PWM_LUT_PAUSE_HI_EN|PM_PWM_LUT_PAUSE_LO_EN;
-                onMs = 500;
-                offMs = 500;
-            } else {
-                // battery full
-                light_template = "0";
-                RampStepMs = "0";
-                lut_flags = PM_PWM_LUT_NO_TABLE;
-                onMs = 0;
-                offMs = 0;
-            }
+        } else if (battery_status == BATTERY_CHARGING) {
+            // battery chagring
+            RampStepMs = "0";
+            light_template = BREATH_LED_BRIGHTNESS_CHARGING;
+            lut_flags = PM_PWM_LUT_LOOP|PM_PWM_LUT_RAMP_UP|PM_PWM_LUT_REVERSE|PM_PWM_LUT_PAUSE_HI_EN|PM_PWM_LUT_PAUSE_LO_EN;
+            onMs = 500;
+            offMs = 500;
+        } else if (battery_status == BATTERY_FULL) {
+            // battery full
+            light_template = "0";
+            RampStepMs = "0";
+            lut_flags = PM_PWM_LUT_NO_TABLE;
+            onMs = 0;
+            offMs = 0;
         }
         last_state = BREATH_SOURCE_BATTERY;
     } else if (active_states & BREATH_SOURCE_BUTTONS) {
@@ -327,10 +318,10 @@ void Light::setSpeakerLightLocked(int event_source, const LightState& state) {
     mRedDutyPcts << light_template << std::endl;
     mRedRampStepMs << RampStepMs << std::endl;
     if (offMs > 0)
-        mRedPauseLo << offMs << std::endl;
+        mRedPauseLo << std::to_string(offMs) << std::endl;
     if (onMs > 0)
-        mRedPauseHi << onMs << std::endl;
-    mRedLutFlags << lut_flags << std::endl;
+        mRedPauseHi << std::to_string(onMs) << std::endl;
+    mRedLutFlags << std::to_string(lut_flags) << std::endl;
 
 }  //Light::setSpeakerLightLocked
 }  // namespace implementation
