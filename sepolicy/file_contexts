@@ -46,7 +46,7 @@
 /system/vendor/bin/RIDLClient.exe               u:object_r:RIDL_exec:s0
 
 /system/bin/atmel_ts\.sh                         u:object_r:atmelts_exec:s0
-
+/system/bin/tp_node\.sh                          u:object_r:touchp_exec:s0
 
 ###################################
 # sysfs files

@@ -1,3 +1,4 @@
-type atmelts, sysfs_type, fs_type;
+type atmelts, domain, sysfs_type, fs_type;
 type atmelts_type, sysfs_type, dev_type;
 type atmelts_exec, exec_type, file_type;
+init_daemon_domain(atmelts)
