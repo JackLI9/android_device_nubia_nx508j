@@ -4,3 +4,6 @@ allow qti_init_shell { sysfs sysfs_kgsl sysfs_kgsl }:file write;
 allow qti_init_shell proc_kernel_sched:file { open read write };
 allow qti_init_shell sysfs_android_usb:file { write };
 allow qti_init_shell file_contexts_file:file { open read getattr };
+allow qti_init_shell atmelts:file { open write getattr setattr };
+allow qti_init_shell atmelts_exec:file { open read };
+allow qti_init_shell touchp_exec:file { open read };
