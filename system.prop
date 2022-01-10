@@ -23,6 +23,7 @@ persist.radio.sw_mbn_update=0
 persist.radio.start_ota_daemon=1
 persist.radio.rat_on=combine
 persist.data.qmi.adb_logmask=0
+ro.telephony.default_network=10
 
 debug.sf.hw=1
 debug.egl.hw=1
