@@ -154,13 +154,11 @@ ro.config.media_vol_steps=25
 ro.config.vc_call_vol_steps=7
 vendor.voice.path.for.pcm.voip=true
 #Enable property to enable ds2
-#audio.dolby.ds2.enabled=true
+vendor.audio.dolby.ds2.enabled=true
 #dolby.audio.sink.info=speaker
 #Dolby DS1 DOLBY_UDC
-#dmid=3067269873
-#audio.ds1.metainfo.key=273
-#enable property for hard bypass
-#audio.dolby.ds2.hardbypass=true
+vendor.audio.dmid=3067269873
+audio.ds1.metainfo.key=273
 
 #WFD
 persist.hwc.enable_vds=1
