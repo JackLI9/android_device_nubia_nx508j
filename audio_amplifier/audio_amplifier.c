@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+#define LOG_TAG "nx508j-tfa98xx"
 
 #include <time.h>
 #include <system/audio.h>
@@ -30,43 +31,25 @@
 #include <dlfcn.h>
 #include <sys/ioctl.h>
 #include <tinyalsa/asoundlib.h>
-
-#define LOG_TAG "nx508j-tfa98xx"
 #include <log/log.h>
-
 #include <hardware/audio_amplifier.h>
 
+#define SAMPLE_RATE 48000
+#define SND_CARD        0
+#define AMP_MIXER_CTL   "Smart PA Init Switch"
+#define AMP_MIXER_CTL_I2S "PORT2 Sync Domain"
 typedef struct tfa9890_device {
     amplifier_device_t amp_dev;
     void *lib_ptr;
     struct mixer *mixer;
     int (*init)(void);
     int (*setSamplerate)(int);
-    int (*manual_calibrate)(void);
     int (*eq_set)(int);
     int (*sepakeron)(void);
     int (*sepakeroff)(void);
 } tfa9890_device_t;
 
 static tfa9890_device_t *tfa9890_dev = NULL;
-
-#define SAMPLE_RATE 48000
-
-#define SND_CARD        0
-#define AMP_MIXER_CTL   "Smart PA Init Switch"
-#define AMP_MIXER_CTL_I2S "PORT2 Sync Domain"
-
-static struct mixer *mixer_new(void)
-{
-    struct mixer *card_mixer;
-
-    if ((card_mixer = mixer_open(SND_CARD)) == NULL) {
-        ALOGE("failed to open mixer");
-        return NULL;
-    }
-
-    return card_mixer;
-}
 
 static int amp_clocks_on(struct mixer *mixer)
 {
@@ -205,7 +188,7 @@ static int amp_module_open(const hw_module_t *module,
         return -ENODEV;
     }
 
-    tfa9890_dev->mixer = mixer_new();
+    tfa9890_dev->mixer = mixer_open(SND_CARD);
     *(void **)&tfa9890_dev->init = dlsym(tfa9890_dev->lib_ptr, "tfa9890_init");
     *(void **)&tfa9890_dev->eq_set = dlsym(tfa9890_dev->lib_ptr, "tfa9890_EQset");
     *(void **)&tfa9890_dev->sepakeron = dlsym(tfa9890_dev->lib_ptr, "tfa9890_SpeakerOn");
@@ -215,12 +198,14 @@ static int amp_module_open(const hw_module_t *module,
     if (!tfa9890_dev->init || !tfa9890_dev->eq_set || !tfa9890_dev->sepakeron || 
         !tfa9890_dev->setSamplerate || !tfa9890_dev->sepakeroff || !tfa9890_dev->mixer) {
         ALOGE("%s:%d: Unable to find required symbols", __func__, __LINE__);
+        mixer_close(tfa9890_dev->mixer);
         dlclose(tfa9890_dev->lib_ptr);
         free(tfa9890_dev);
         return -ENODEV;
     }
 
     if (amp_init(tfa9890_dev)) {
+        mixer_close(tfa9890_dev->mixer);
         dlclose(tfa9890_dev->lib_ptr);
         free(tfa9890_dev);
         return -ENODEV;
