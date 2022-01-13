@@ -38,6 +38,9 @@
 #define SND_CARD        0
 #define AMP_MIXER_CTL   "Smart PA Init Switch"
 #define AMP_MIXER_CTL_I2S "PORT2 Sync Domain"
+#define DOLBY_EQ        2
+#define NORMAL_EQ        0
+
 typedef struct tfa9890_device {
     amplifier_device_t amp_dev;
     void *lib_ptr;
@@ -110,8 +113,9 @@ static int is_speaker(uint32_t snd_device) {
     return speaker;
 }
 
-static int is_voice_speaker(uint32_t snd_device) {
-    return snd_device == SND_DEVICE_OUT_VOICE_SPEAKER;
+static bool is_voice_speaker(uint32_t snd_device) {
+    return ((snd_device == SND_DEVICE_OUT_VOICE_SPEAKER) 
+            || (snd_device == SND_DEVICE_IN_VOICE_SPEAKER_MIC));
 }
 
 static int amp_enable_output_devices(amplifier_device_t *device, uint32_t devices, bool enable) {
@@ -122,9 +126,9 @@ static int amp_enable_output_devices(amplifier_device_t *device, uint32_t device
         if (enable) {
             tfa9890->sepakeron();
             if (is_voice_speaker(devices)) {
-                tfa9890->eq_set(1);
+                tfa9890->eq_set(NORMAL_EQ);
             } else {
-                tfa9890->eq_set(0);
+                tfa9890->eq_set(DOLBY_EQ); //dolby eq.
             }
         } else {
             tfa9890->sepakeroff();
