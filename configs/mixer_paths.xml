@@ -1711,7 +1711,7 @@
     </path>
 
     <path name="voice-speaker">
-        <ctl name="SLIM RX1 MUX" value="SB1_PB" />
+        <!--ctl name="SLIM RX1 MUX" value="SB1_PB" />
         <ctl name="SLIM_0_RX Channels" value="One" />
         <ctl name="DSPI4 Source Selector" value="SBI1" />
         <ctl name="DSP Downlink Status" value="on" />
@@ -1720,11 +1720,12 @@
         <ctl name="DSPO2 Mixer DSPI4_Switch" value="1" />
         <ctl name="PORT2 Sync Domain" value="slimbus" />
         <ctl name="SDTO2 Source Selector" value="DSPO2" />
-        <ctl name="DSPI2 Source Selector" value="SDTI2" />
+        <ctl name="DSPI2 Source Selector" value="SDTI2" /-->
+        <path name="speaker" />
     </path>
 
     <path name="voice-speaker-mic">
-        <ctl name="SB1_CAP Mixer SLIM TX7" value="1"/>
+        <!--ctl name="SB1_CAP Mixer SLIM TX7" value="1"/>
         <ctl name="SB1_CAP Mixer SLIM TX8" value="1"/>
         <ctl name="SLIM_0_TX Channels" value="Two" />
         <ctl name="AIN1 PMMP Selector" value="MPWR1A" />
@@ -1741,6 +1742,9 @@
         <ctl name="DSPO4 Mixer DSPI3_Switch" value="1" />
         <ctl name="SBO1L Source Selector" value="DSPO4" />
         <ctl name="SBO1R Source Selector" value="DSPO4" />
+        <ctl name="MIC Gain 1L" value="8" />
+        <ctl name="MIC Gain 1R" value="8" /-->
+        <path name="speaker-mic" />
         <ctl name="MIC Gain 1L" value="8" />
         <ctl name="MIC Gain 1R" value="8" />
     </path>
