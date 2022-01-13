@@ -244,11 +244,11 @@
                 <route type="mix" sink="Earpiece"
                        sources="primary output,low_latency,compressed_offload,incall_music,voip_rx,BT SCO Headset Mic"/>
                 <route type="mix" sink="Speaker"
-                       sources="primary output,low_latency,compressed_offload,incall_music,voip_rx,BT SCO Headset Mic"/>
+                       sources="primary output,low_latency,compressed_offload,incall_music,voip_rx,BT SCO Headset Mic,Telephony Rx"/>
                 <route type="mix" sink="Wired Headset"
-                       sources="primary output,low_latency,compressed_offload,incall_music,voip_rx,BT SCO Headset Mic"/>
+                       sources="primary output,low_latency,compressed_offload,incall_music,voip_rx,BT SCO Headset Mic,Telephony Rx"/>
                 <route type="mix" sink="Wired Headphones"
-                       sources="primary output,low_latency,compressed_offload,incall_music,voip_rx,BT SCO Headset Mic"/>
+                       sources="primary output,low_latency,compressed_offload,incall_music,voip_rx,BT SCO Headset Mic,Telephony Rx"/>
                 <route type="mix" sink="Line"
                        sources="primary output,low_latency,compressed_offload,incall_music,voip_rx"/>
                 <route type="mix" sink="HDMI"
