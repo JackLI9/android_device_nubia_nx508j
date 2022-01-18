@@ -257,7 +257,7 @@ BOARD_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy
 # Shims
 TARGET_LD_SHIM_LIBS := \
     /system/vendor/lib64/libcne.so|libshim_dpmframework.so \
-    /system/lib/hw/camera.msm8994.so|libshim_camera.so \
+    /system/vendor/lib/hw/camera.msm8994.so|libshim_camera.so \
     /system/vendor/lib/libmmcamera2_stats_modules.so|libshim_cald.so \
     /system/vendor/lib/libmmcamera2_sensor_modules.so|libshim_atomic.so \
     /system/vendor/lib64/libril-qc-qmi-1.so|libril_shim.so
