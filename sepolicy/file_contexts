@@ -39,7 +39,10 @@
 /sys/devices/soc\.0/qpnp-wled-(.*)?/leds(/.*)?                          u:object_r:sysfs_leds:s0
 /sys/devices/soc\.0/leds-qpnp-(.*)?/leds(/.*)?/nubia_led(/.*)?                          u:object_r:sysfs_leds:s0
 /sys/devices/soc\.0/[a-z0-9]+.qcom,mdss_mdp/[a-z0-9]+.qcom,mdss_mdp:qcom,mdss_fb_primary/leds/lcd-backlight(/.*)?    u:object_r:sysfs_leds:s0
-/(vendor|system/vendor)/bin/hw/android\.hardware\.light@2\.0-service.nx508j    u:object_r:hal_light_default_exec:s0
+
+# HALs
+/(vendor|system/vendor)/bin/hw/android\.hardware\.light@2\.0-service\.nx508j    u:object_r:hal_light_default_exec:s0
+/(vendor|system/vendor)/bin/hw/vendor\.lineage\.touch@1\.0-service\.nx508j    u:object_r:hal_nubia_touch_exec:s0
 
 # Net
 /sys/devices/virtual/net/rmnet_data[0-7]+/mtu                           u:object_r:sysfs_net:s0
@@ -91,6 +94,7 @@
 /sys/bus/i2c/devices/2-004a/t25                                     u:object_r:atmelts:s0
 /sys/bus/i2c/devices/2-004a/update_cfg0                             u:object_r:atmelts:s0
 /sys/bus/i2c/devices/2-004a/update_fw0                              u:object_r:atmelts:s0
+/sys/bus/i2c/devices/2-004a/disable_keys                            u:object_r:atmelts:s0
 #/sys/devices/soc.0/f9924000.i2c/i2c-2/2-004a(/.*)?                 u:object_r:atmelts:s0
 /sys/devices/soc.0/f9924000.i2c/i2c-2/2-004a/bootloader             u:object_r:atmelts:s0
 /sys/devices/soc.0/f9924000.i2c/i2c-2/2-004a/clip                   u:object_r:atmelts:s0
@@ -122,6 +126,7 @@
 /sys/devices/soc.0/f9924000.i2c/i2c-2/2-004a/t25                    u:object_r:atmelts:s0
 /sys/devices/soc.0/f9924000.i2c/i2c-2/2-004a/update_cfg0            u:object_r:atmelts:s0
 /sys/devices/soc.0/f9924000.i2c/i2c-2/2-004a/update_fw0             u:object_r:atmelts:s0
+/sys/devices/soc.0/f9924000.i2c/i2c-2/2-004a/disable_keys           u:object_r:atmelts:s0
 /sys/devices/soc.0/f9924000.i2c/i2c-2/2-004a/grip_sup_enable        u:object_r:atmelts_type:s0
 /sys/class/proximity/proximity/prox_offset_cal_start                u:object_r:sysfs_prox_cal:s0
 /sys/class/proximity/proximity/prox_data_safe_range_min             u:object_r:sysfs_prox_cal:s0

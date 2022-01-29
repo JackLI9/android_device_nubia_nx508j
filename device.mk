@@ -297,6 +297,10 @@ PRODUCT_PACKAGES += \
     ebtables \
     ethertypes
 
+# Touch
+PRODUCT_PACKAGES += \
+    vendor.lineage.touch@1.0-service.nx508j
+
 # Keymaster
 PRODUCT_PACKAGES += \
     android.hardware.keymaster@3.0-impl \
