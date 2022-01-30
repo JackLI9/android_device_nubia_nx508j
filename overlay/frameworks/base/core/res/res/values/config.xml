@@ -40,11 +40,15 @@
         <item>5</item>        <!-- dark indoor -->
         <item>10</item>       <!-- twilight -->
         <item>50</item>       <!-- dim indoor -->
-        <item>100</item>      <!-- home -->
+        <item>80</item>      <!-- home -->
         <item>300</item>      <!-- office -->
+        <item>400</item>
         <item>500</item>      <!-- sunrise -->
         <item>1000</item>     <!-- overcast -->
-        <item>3000</item>     <!-- indirect sun -->
+        <item>2000</item>
+        <item>3000</item>
+        <item>6000</item>
+        <item>8000</item>     <!-- indirect sun -->
         <item>10000</item>    <!-- daylight -->
     </integer-array>
 
@@ -59,11 +63,15 @@
         <item>24</item>
         <item>31</item>
         <item>48</item>
-        <item>74</item>
-        <item>107</item>
-        <item>152</item>
-        <item>194</item>
-        <item>254</item>
+        <item>64</item>
+        <item>83</item>
+        <item>96</item>
+        <item>136</item>
+        <item>155</item>
+        <item>168</item>
+        <item>177</item>
+        <item>192</item>
+        <item>233</item>
         <item>255</item>
     </integer-array>
 
