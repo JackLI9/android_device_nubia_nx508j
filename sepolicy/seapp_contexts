@@ -1,4 +1,5 @@
 user=system seinfo=platform name=com.sony.timekeep domain=timekeep_app type=app_data_file
+user=_app seinfo=platform name=com.uei.quicksetsdk.letv domain=quicksetsdk_app type=app_data_file
 # Why app_data_file and not system_app_data_file?
 # Because some daemon needs access to /data/data/com.sony.{timekeep,qcrilam}
 # This happens with system_app_data_file:

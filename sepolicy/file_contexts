@@ -33,6 +33,11 @@
 /dev/cpuset(/.*)?                                                       u:object_r:cgroup:s0
 /dev/stune(/.*)?                                                        u:object_r:cgroup:s0
 
+# Consumer IR
+/system/bin/hw/android\.hardware\.ir@1\.0-service\.nx508j                                 u:object_r:hal_ir_nubia_nx508j_exec:s0
+/dev/ttyHSL1                                                                                u:object_r:consumer_ir_device:s0
+/sys/class/ir_remote/ir_remote/enable                                                                          u:object_r:sysfs_ir_enable:s0
+
 # Lights
 /sys/class/leds(/.*)?                                                   u:object_r:sysfs_leds:s0
 /sys/devices/soc\.0/leds-qpnp-(.*)?/leds(/.*)?                          u:object_r:sysfs_leds:s0

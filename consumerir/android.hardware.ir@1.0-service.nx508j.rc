@@ -1,0 +1,9 @@
+on init
+    chown system system /sys/class/ir_remote/ir_remote/enable
+    chmod 0666 /sys/class/ir_remote/ir_remote/enable
+    chmod 0666 /dev/ttyHSL1
+
+service ir-hal-1-0 /vendor/bin/hw/android.hardware.ir@1.0-service.nx508j
+    class hal
+    user system
+    group system

@@ -1,0 +1,9 @@
+type hal_ir_nubia_nx508j, domain, coredomain;
+type hal_ir_nubia_nx508j_exec, exec_type, file_type;
+
+hal_server_domain(hal_ir_nubia_nx508j, hal_ir)
+
+init_daemon_domain(hal_ir_nubia_nx508j)
+
+# Connect unix_stream_socket
+allow hal_ir_nubia_nx508j system_app:unix_stream_socket connectto;

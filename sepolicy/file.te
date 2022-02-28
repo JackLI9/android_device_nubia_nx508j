@@ -9,3 +9,4 @@ type persist_proxcal_file, file_type;
 type sysfs_performance, sysfs_type, fs_type;
 type sysfs_power_management, fs_type, sysfs_type;
 type rfs_data_file, file_type;
+type sysfs_ir_enable, fs_type, sysfs_type;

@@ -96,6 +96,7 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.usb.host.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.usb.host.xml \
     frameworks/native/data/etc/android.hardware.bluetooth.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.bluetooth.xml \
     frameworks/native/data/etc/android.hardware.bluetooth_le.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.bluetooth_le.xml \
+    frameworks/native/data/etc/android.hardware.consumerir.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.consumerir.xml \
     frameworks/native/data/etc/android.hardware.audio.low_latency.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.audio.low_latency.xml
 
 # vulkan
@@ -158,6 +159,11 @@ PRODUCT_PACKAGES += \
     tinymix \
     tinypcminfo \
     tinycap \
+
+#ConsumerIr
+PRODUCT_PACKAGES += \
+    ConsumerirTransmitter \
+    android.hardware.ir@1.0-service.nx508j
 
 # Qualcomm dependencies
 PRODUCT_PACKAGES += \
