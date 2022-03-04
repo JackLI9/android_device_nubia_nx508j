@@ -34,7 +34,7 @@
 /dev/stune(/.*)?                                                        u:object_r:cgroup:s0
 
 # Consumer IR
-/(vendor|system/vendor)/bin/hw/android\.hardware\.ir@1\.0-service\.nx508j                                 u:object_r:hal_ir_nubia_nx508j_exec:s0
+/(vendor|system/vendor)/bin/hw/android\.hardware\.ir@1\.0-service\.nx508j                                 u:object_r:hal_ir_default_exec:s0
 /dev/ttyHSL1                                                                                u:object_r:consumer_ir_device:s0
 /sys/class/ir_remote/ir_remote/enable                                                                          u:object_r:sysfs_ir_enable:s0
 
