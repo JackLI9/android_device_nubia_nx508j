@@ -14,7 +14,7 @@ public class IControl {
     /**
      * This is the package name of the Leeco QuickSet service
      */
-    public static final String QUICKSET_UEI_PACKAGE_NAME = "com.uei.quicksetsdk.letv";
+    public static final String QUICKSET_UEI_PACKAGE_NAME = "com.uei.quicksetsdk.zteitwo";
 
     /**
      * This is the service class name within the Quickset Package.
